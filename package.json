@@ -1,0 +1,41 @@
+{
+  "name": "swipeable-react",
+  "version": "1.2.0",
+  "main": "lib/index.js",
+  "description": "React component for swipe events on touch",
+  "homepage": "https://github.com/moubi/swipeable-react#readme",
+  "author": "Miroslav Nikolov",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moubi/swipeable-react"
+  },
+  "dependencies": {
+    "react": "16.9.0",
+    "react-dom": "16.9.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/preset-env": "^7.8.6",
+    "@babel/preset-react": "^7.8.3",
+    "babel-jest": "^25.1.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-react": "^7.18.3",
+    "jest": "^25.1.0",
+    "react-dom-testing": "^1.5.0",
+    "react-test-renderer": "^16.13.0",
+    "sinon": "9.0.0",
+    "unexpected": "^11.0.1",
+    "unexpected-dom": "^4.11.1",
+    "unexpected-reaction": "^2.6.0",
+    "unexpected-sinon": "^10.11.2",
+    "prettier": "~1.17.0"
+  },
+  "scripts": {
+    "build": "mkdir -p lib && babel ./src --out-file ./lib/index.js",
+    "prepublish": "rm -rf ./lib && npm run build",
+    "test": "jest --watch",
+    "test:nowatch": "jest",
+    "lint": "eslint ."
+  }
+}
