@@ -1,14 +1,14 @@
 {
-  "name": "swipeable-react",
-  "version": "1.2.0",
+  "name": "reform-react",
+  "version": "0.0.1",
   "main": "lib/index.js",
-  "description": "React component for swipe events on touch",
-  "homepage": "https://github.com/moubi/swipeable-react#readme",
+  "description": "Hides the dirty form parts - validation, changes, submission",
+  "homepage": "https://github.com/moubi/reform-react#readme",
   "author": "Miroslav Nikolov",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moubi/swipeable-react"
+    "url": "https://github.com/moubi/reform-react"
   },
   "dependencies": {
     "react": "16.9.0",
