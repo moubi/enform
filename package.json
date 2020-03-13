@@ -1,6 +1,6 @@
 {
   "name": "reform-react",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "lib/index.js",
   "description": "Hides the dirty form parts - validation, changes, submission",
   "homepage": "https://github.com/moubi/reform-react#readme",
