@@ -11,8 +11,8 @@
     "url": "https://github.com/moubi/reform-react"
   },
   "dependencies": {
-    "react": "16.9.0",
-    "react-dom": "16.9.0"
+    "react": "16.13.0",
+    "react-dom": "16.13.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -20,7 +20,7 @@
     "@babel/preset-react": "^7.8.3",
     "babel-jest": "^25.1.0",
     "eslint": "^6.8.0",
-    "eslint-plugin-react": "^7.18.3",
+    "eslint-plugin-react": "^7.19.0",
     "jest": "^25.1.0",
     "react-dom-testing": "^1.5.0",
     "react-test-renderer": "^16.13.0",
@@ -29,7 +29,7 @@
     "unexpected-dom": "^4.11.1",
     "unexpected-reaction": "^2.6.0",
     "unexpected-sinon": "^10.11.2",
-    "prettier": "~1.17.0"
+    "prettier": "~1.19.1"
   },
   "scripts": {
     "build": "mkdir -p lib && babel ./src --out-file ./lib/index.js",
