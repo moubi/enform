@@ -20,7 +20,7 @@ export default class ReForm extends PureComponent {
       onChange: this.onChange.bind(this),
       onSubmit: this.onSubmit.bind(this),
       isDirty: this.isDirty.bind(this),
-      onValidateField: this.onValidateField.bind(this),
+      validateField: this.validateField.bind(this),
       clearError: this.clearError.bind(this)
     };
   }
@@ -56,7 +56,7 @@ export default class ReForm extends PureComponent {
     );
   }
 
-  onValidateField(name) {
+  validateField(name) {
     const { values, errors } = this.state;
 
     if (values[name]) {
