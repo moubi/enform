@@ -1,90 +1,62 @@
-# reform-react
-Enjoyable forms with React - validation, changes, submission.
+<div align="center">
+<h1>ReFrom</h1>
 
-Example bellow: https://codesandbox.io/s/sharp-aryabhata-limwq
+**Enjoyable forms with React 🍿**
 
-```jsx
-<div className="App">
-  <h1>ReForm</h1>
-  <p>Enjoyable forms with React!</p>
-
-  <ReForm
-    initial={{
-      username: "",
-      email: "",
-      password: "",
-      repeatPassword: ""
-    }}
-    validation={{
-      username: ({ username }) =>
-        !isValidUsername(username) ? "invalidAddress" : "",
-      email: ({ email }) => (!isValidEmail(email) ? "invalidEmail" : ""),
-      password: ({ password, repeatPassword }) =>
-        !isValidPassword(password) && !isValidPassword(repeatPassword)
-          ? "minSixChar"
-          : password !== repeatPassword
-          ? "noMatchPassword"
-          : ""
-    }}
-    onSubmit={this.handleSubmit}
-  >
-    {({ values, errors, onChange }) => (
-      <>
-        <div>
-          <label>Username:</label>
-          <input
-            className={classNames({
-              error: errors.username
-            })}
-            type="text"
-            value={values.username}
-            onChange={e => {
-              onChange("username", e.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input
-            className={classNames({
-              error: errors.email
-            })}
-            type="text"
-            value={values.email}
-            onChange={e => {
-              onChange("email", e.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            className={classNames({
-              error: errors.password
-            })}
-            type="password"
-            value={values.password}
-            onChange={e => {
-              onChange("password", e.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <label>Repeat password:</label>
-          <input
-            className={classNames({
-              error: errors.password
-            })}
-            type="password"
-            value={values.repeatPassword}
-            onChange={e => {
-              onChange("repeatPassword", e.target.value);
-            }}
-          />
-        </div>
-        <button>Submit</button>
-      </>
-    )}
-  </ReForm>
+[![moubi](https://img.shields.io/npm/v/reform-react?style=flat-square)](https://www.npmjs.com/package/reform-react) [![moubi](https://img.shields.io/github/license/moubi/reform-react?style=flat-square)](LICENSE)
 </div>
+
+## Why
+Why do we need this? Aren't there many other implementations?
+
+## Features
+`ReForm` tries to hide/help with the following:
+ - validation;
+ - dirty state;
+ - submission and change events;
+ - internal state of field values and errors;
+
+## Install
 ```
+yarn add --save reform-react
+```
+
+## Basic usage
+```jsx
+import React from "react";
+import ReForm from "./ReForm";
+
+const App = () => (
+  <div>
+    <h1>Simple form</h1>
+    <ReForm
+      initial={{ name: "" }}
+      validation={{
+        name: values => values.name === ""
+      }}
+    >
+      {({ values, errors, onChange, onSubmit }) => (
+        <div>
+          <input
+            className={errors.name ? "error" : ""}
+            type="text"
+            placeholder="Name"
+            value={values.name}
+            onChange={e => {
+              onChange("name", e.target.value);
+            }}
+          />
+          <button onClick={onSubmit}>Submit</button>
+        </div>
+      )}
+    </ReForm>
+  </div>
+);
+```
+[![Edit Basic form with reform-react](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/unruffled-river-t1zyk?fontsize=14&hidenavigation=1&theme=dark)
+
+## Authors
+Miroslav Nikolov ([@moubi](https://github.com/moubi))
+
+## License
+[MIT](LICENSE)

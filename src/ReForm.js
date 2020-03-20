@@ -98,11 +98,11 @@ export default class ReForm extends PureComponent {
   }
 
   onSubmit(submitCallback) {
-    if (typeof submitCallback === "function") {
-      this.validate(() => {
+    this.validate(() => {
+      if (typeof submitCallback === "function") {
         submitCallback(this.state.values);
-      });
-    }
+      }
+    });
   }
 
   onChange(name, value) {
