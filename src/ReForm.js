@@ -115,10 +115,10 @@ export default class ReForm extends PureComponent {
 
   render() {
     const { values, errors } = this.state;
-    const { children } = this.props;
+    const { children, className } = this.props;
 
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form className={className || null} onSubmit={this.handleSubmit}>
         {children({ values, errors, ...this.handlers })}
       </form>
     );
@@ -128,6 +128,7 @@ export default class ReForm extends PureComponent {
 ReForm.propTypes = {
   children: PropTypes.func.isRequired,
   initial: PropTypes.object.isRequired,
+  className: PropTypes.string,
   validation: PropTypes.object,
   onSubmit: PropTypes.func
 };
