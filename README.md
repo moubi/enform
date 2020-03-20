@@ -24,7 +24,7 @@ yarn add --save reform-react
 ## Basic usage
 ```jsx
 import React from "react";
-import ReForm from "./ReForm";
+import ReForm from "reform-react";
 
 const App = () => (
   <div>
