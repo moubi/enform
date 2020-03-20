@@ -7,7 +7,12 @@
 </div>
 
 ## Why
-Why do we need this? Aren't there many other implementations?
+ - Why do we need this?
+
+Less headache when working with form in React. You can actually enjoy it.
+
+ - Aren't there other implementations? Why another one?
+There are other solutions as well. [Formik](https://github.com/jaredpalmer/formik) is a famous one - robust and reliable. **`ReForm`, though is lightweight and gives you just the basics you need.** See below ⤵️
 
 ## Features
 `ReForm` tries to hide/help with the following:
