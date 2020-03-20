@@ -17,7 +17,8 @@ export default class ReForm extends PureComponent {
     };
 
     this.handlers = {
-      onChange: this.onChange.bind(this)
+      onChange: this.onChange.bind(this),
+      onValidateField: this.onValidateField.bind(this)
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -41,6 +42,27 @@ export default class ReForm extends PureComponent {
     });
 
     return this.isValid();
+  }
+
+  onValidateField(name) {
+    const { values, errors } = this.state;
+
+    if (values[name]) {
+      const { validation } = this.props;
+
+      if (typeof validation[name] === "function") {
+        const isInvalid = validation[name](values);
+        this.setState({
+          errors: {
+            ...errors,
+            [name]: isInvalid
+          }
+        });
+        // Retirning the oposite: is the field valid
+        return !isInvalid;
+      }
+      return true;
+    }
   }
 
   isValid() {
