@@ -19,9 +19,7 @@ describe("ReForm", () => {
       </ReForm>,
       "when mounted",
       "to exhaustively satisfy",
-      <form>
-        <input type="text" value="" />
-      </form>
+      <input type="text" value="" />
     );
   });
 });
