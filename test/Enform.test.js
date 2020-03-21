@@ -1,12 +1,12 @@
 import expect from "./utils/unexpected-react";
 import React from "react";
 
-import ReForm from "../src/ReForm";
+import Enform from "../src/Enform";
 
-describe("ReForm", () => {
+describe("Enform", () => {
   it("should render default", () => {
     return expect(
-      <ReForm initial={{ username: "" }}>
+      <Enform initial={{ username: "" }}>
         {({ values, onChange }) => (
           <input
             type="text"
@@ -16,7 +16,7 @@ describe("ReForm", () => {
             }}
           />
         )}
-      </ReForm>,
+      </Enform>,
       "when mounted",
       "to exhaustively satisfy",
       <input type="text" value="" />

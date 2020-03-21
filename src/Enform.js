@@ -7,7 +7,7 @@ const errorsFromInitialValues = initial =>
     {}
   );
 
-export default class ReForm extends PureComponent {
+export default class Enform extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -139,7 +139,7 @@ export default class ReForm extends PureComponent {
   }
 }
 
-ReForm.propTypes = {
+Enform.propTypes = {
   children: PropTypes.func.isRequired,
   initial: PropTypes.object.isRequired,
   validation: PropTypes.object
