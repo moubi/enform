@@ -1,14 +1,14 @@
 {
-  "name": "reform-react",
+  "name": "enform",
   "version": "1.0.1",
   "main": "lib/index.js",
-  "description": "Hides the dirty form parts - validation, changes, submission",
-  "homepage": "https://github.com/moubi/reform-react#readme",
+  "description": "Enjoyable forms with React!",
+  "homepage": "https://github.com/moubi/enform#readme",
   "author": "Miroslav Nikolov",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moubi/reform-react"
+    "url": "https://github.com/moubi/enform"
   },
   "dependencies": {
     "react": "16.13.0",
