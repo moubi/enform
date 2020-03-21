@@ -45,7 +45,6 @@ const App = () => (
           <input
             className={errors.name ? "error" : ""}
             type="text"
-            placeholder="Name"
             value={values.name}
             onChange={e => {
               onChange("name", e.target.value);

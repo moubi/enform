@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import { PureComponent } from "react";
 import PropTypes from "prop-types";
 
 const errorsFromInitialValues = initial =>
@@ -133,24 +133,14 @@ export default class ReForm extends PureComponent {
 
   render() {
     const { values, errors } = this.state;
-    const { children, className } = this.props;
+    const { children } = this.props;
 
-    return (
-      <form
-        className={className || null}
-        onSubmit={e => {
-          e.preventDefault();
-        }}
-      >
-        {children({ values, errors, ...this.handlers })}
-      </form>
-    );
+    return children({ values, errors, ...this.handlers });
   }
 }
 
 ReForm.propTypes = {
   children: PropTypes.func.isRequired,
   initial: PropTypes.object.isRequired,
-  className: PropTypes.string,
   validation: PropTypes.object
 };
