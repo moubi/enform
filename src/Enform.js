@@ -89,12 +89,15 @@ export default class Enform extends PureComponent {
   }
 
   clearError(name) {
-    this.setState({
+    // Use an updater function here since this method is often used in
+    // combination with onChange(). Both are setting state, so we don't
+    // want to lose changes.
+    this.setState(prevState => ({
       errors: {
-        ...this.state.errors,
+        ...prevState.errors,
         [name]: false
       }
-    });
+    }));
   }
 
   onSubmit(submitCallback) {
