@@ -50,7 +50,7 @@ export default class Enform extends PureComponent {
       },
       () => {
         if (this.isValid()) {
-          onValid();
+          onValid(this.state.values);
         }
       }
     );
@@ -70,7 +70,7 @@ export default class Enform extends PureComponent {
             [name]: isInvalid
           }
         });
-        // Retirning the oposite: is the field valid
+        // Returning the oposite: is the field valid
         return !isInvalid;
       }
       return true;
@@ -101,9 +101,9 @@ export default class Enform extends PureComponent {
   }
 
   onSubmit(submitCallback) {
-    this.validate(() => {
+    this.validate(values => {
       if (typeof submitCallback === "function") {
-        submitCallback(this.state.values);
+        submitCallback(values);
       }
     });
   }
