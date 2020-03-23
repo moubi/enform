@@ -121,19 +121,6 @@ export default class Enform extends PureComponent {
     });
   }
 
-  onValidate(name, validationFunction) {
-    const { values, errors } = this.state;
-
-    if (typeof validationFunction === "function") {
-      this.setState({
-        errors: {
-          ...errors,
-          [name]: validationFunction(values[name])
-        }
-      });
-    }
-  }
-
   render() {
     const { values, errors } = this.state;
     const { children } = this.props;
