@@ -86,12 +86,14 @@ export default class Enform extends PureComponent {
 
   clearErrors() {
     this.setState({
-      ...errorsFromInitialValues(this.props.initial)
+      errors: {
+        ...errorsFromInitialValues(this.props.initial)
+      }
     });
   }
 
   clearFields() {
-    const { initial } = this.state;
+    const { initial } = this.props;
     const fieldNames = Object.keys(initial);
     const resetValues = {};
 
