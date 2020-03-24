@@ -21,7 +21,9 @@ export default class Enform extends PureComponent {
       onSubmit: this.onSubmit.bind(this),
       isDirty: this.isDirty.bind(this),
       validateField: this.validateField.bind(this),
-      clearError: this.clearError.bind(this)
+      clearError: this.clearError.bind(this),
+      clearErrors: this.clearErrors.bind(this),
+      clearFields: this.clearFields.bind(this)
     };
   }
 
@@ -85,6 +87,34 @@ export default class Enform extends PureComponent {
   clearErrors() {
     this.setState({
       ...errorsFromInitialValues(this.props.initial)
+    });
+  }
+
+  clearFields() {
+    const { initial } = this.state;
+    const fieldNames = Object.keys(initial);
+    const resetValues = {};
+
+    // TODO: this needs additional research.
+    // What are the different type of values we may have.
+    fieldNames.forEach(name => {
+      if (typeof initial[name] === "string") {
+        resetValues[name] = "";
+      } else if (typeof initial[name] === "boolean") {
+        resetValues[name] = false;
+      } else if (typeof initial[name] === "number") {
+        resetValues[name] = 0;
+      } else if (initial[name] === null) {
+        resetValues[name] = null;
+      } else if (Array.isArray(initial[name])) {
+        resetValues[name] = [];
+      } else {
+        resetValues[name] = this.initial;
+      }
+    });
+
+    this.setState({
+      values: { ...resetValues }
     });
   }
 
