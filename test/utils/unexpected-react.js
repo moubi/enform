@@ -34,4 +34,6 @@ export function getInstance(reactElement, tagName = "div") {
   return result;
 }
 
+export { simulate } from "react-dom-testing";
+
 export default expect;
