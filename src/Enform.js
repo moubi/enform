@@ -61,7 +61,7 @@ export default class Enform extends PureComponent {
   validateField(name) {
     const { values, errors } = this.state;
 
-    if (values[name]) {
+    if (typeof values[name] !== "undefined") {
       const { validation } = this.props;
 
       if (typeof validation[name] === "function") {
