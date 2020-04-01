@@ -69,11 +69,12 @@ const App = () => (
 ```
 [![Edit Basic form with enform](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/newsletter-form-with-enform-dv69b?fontsize=14&hidenavigation=1&theme=dark)
 
-Things to note here:
+Few things to note here:
  - required `initial` prop is set with the field's default value
  - `validation` object defines that the field should not be empty
  - `props.onSubmit` is bound to the button click. It will submit whenever validation defined earlier is passed
  - the input field is fully controlled by using `props.values` and `props.onChange`.
+___
 
 ### Newsletter form
 <img align="right" width="385" src="../assets/newsletter_form.png">
@@ -107,8 +108,9 @@ Things to note here:
 [![Edit Newsletter form with enform](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/newsletter-form-with-enform-t1zyk?fontsize=14&hidenavigation=1&theme=dark)
 
 In this example we have email `validation` based on a RegEx. Validator function will return `true` if email is invalid or `false` otherwise. All validators must return truthy value (either true or error message) if there is an error.
+___
 
-### Newsletter form
+### Registration form
 <img align="right" width="385" src="../assets/registration_form.png">
 
 ```jsx
@@ -165,6 +167,7 @@ I have shortened this example, so that we can focus on two interesting parts - *
 In our registration form we want to display error messages as well. In order that to work each validator function must return the error string in case of an error. Otherwise it may return `false`. The `password` field validation depends on both password and repeatPassword, so it can display two different error messages.
 
 **Second**, on the password `onChange` event we want to also clear the error for `repeatPassword`. Since `props.onChange("password", e.target.value)` will only clear password field's error we have to programatically clear the one for repeatPassword as well. This is done by calling `props.clearError("repeatPassword")`.
+___
 
 ### Form with dynamic elements
 <img align="right" width="385" src="../assets/dynamic_form.png">
@@ -226,6 +229,7 @@ In our registration form we want to display error messages as well. In order tha
 Enfrom does not automatically handle dynamic form elements (adding or removing felds), but you can make it aware of these changes with few adjustments. The example above is a short version of the [codesandbox demo](https://codesandbox.io/s/dynamic-form-fields-with-enform-bnho9?fontsize=14&hidenavigation=1&theme=dark).
 
 **Let's start with the basics:** Enform wraps your form DOM and helps you handle its state changes. But you have to make Enform aware when your DOM changes - specifically if it is related to controlled fields. In this code snippet we **force Enform to reinitialize** when more fields are added or removed by setting the `key={fieldNames.length}` prop. Next step is to **update** the `initial` and `validation` props with the fields data. *Note that we have to keep track of this data ourself in our component state fx*. The last thing to do is to render all these newly added fields. Enform will do the rest as usual.
+___
 
 ### Full-featured form
 <img align="right" width="385" src="../assets/fullfeatured_form.png">
@@ -430,6 +434,7 @@ Few interesting areas:
  - **Resetting the form.** There is no `props.reset()` method, but we can achieve the same effect by combining `props.clearErrors()` and `props.clearFields()`.
  - **Clear error on focus.** This is done by calling `props.clearError()`. It is bound to the `onFocus` handler of the bio field in the demo.
  - **Validate on every change.** With the email field we have `props.validateField()` called from the `onChange`. It will trigger validation for this field on every change and will be cleared once the valid email is typed.
+___
 
 ## API
 
