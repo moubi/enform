@@ -3,12 +3,12 @@
 
 **Enjoyable forms with React 🍿**
 
-<sup>small (2kB gzipped), with no external dependencies</sup>
+Small (2kB) state wrapper component for React forms with no dependencies.
 
 [![moubi](https://img.shields.io/npm/v/enform?style=flat-square)](https://www.npmjs.com/package/enform) [![moubi](https://img.shields.io/github/license/moubi/enform?style=flat-square)](LICENSE)
 </div>
 
-`Enform` will help you with the following:
+`<Enform />` helps you with:
  - form validation
  - form dirty state
  - form submission and changes
