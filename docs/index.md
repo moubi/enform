@@ -455,6 +455,7 @@ This prop is the only required one. You need to set it, since it's the only way 
 
 #### `validation: { <field_name:string>: <(values:object) => bool|string)> }`
 This prop helps you specify fields validation conditions and errors. Don't set it if you don't need it. The `key` (field name) part should also be present in the `initial`. The `value` is a validation function which passes all field values down. It returns an **error message** when field is invalid or just a **boolean** if you don't need messages. With `{ username: values => values.username.length === 0 }` we return a boolean which simply reports if the field is empty. This is useful when you want to set an error class. Setting up  error messages is achieved with something like that `{ username: values => values.username.length === 0 ? "This field is required" : "" }`
+___
 
 ### Enform state API
 By taking care of your form's state Enform provides you with access to it by exposing several props and methods. These are passed down to your component via the `props` object.
@@ -537,5 +538,6 @@ Calling it will clear all errors in the form. Useful if want to reset the form. 
 
 #### `props.clearFields: () => void`
 Clear all fields. Calling `props.clearFields` won't set the fields back to their `initial` values, but instead it will try to set each field to an empty state. This is done by evaluating the value types set as part of `initial` prop.
+___
 
 ## How to
