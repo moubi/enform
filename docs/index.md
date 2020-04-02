@@ -437,9 +437,105 @@ Few interesting areas:
 ___
 
 ## API
+`<Enform />` component wraps your form DOM (or custom component) and allows you to controll it via `props`. These are devided in two - props that you set to Enform directly and props that Enform passes down to your form component.
 
-### `<Enform />` component props
+### Enform component props
+You can set two props to Enform itself - `initial` and `validation`.
+```jsx
+<Enform
+  initial={{ username: "" }}
+  validation={{ username: values => values.username.length === 0 }}
+>
+  ...
+</Enform>
+```
 
-### `<Enform />` state API
+#### `initial: { <field_name:string>: <initial_value:any> }` - required
+This prop is the only required one. You need to set it, since it's the only way to tell Enform about your form structure. The initial value of each field should be a valid React element value, meaning that if you have `checkbox` fx. it make sense for the value to be `boolean`. The signature could be something like that `{ email: "", password: "", newsletter: false }`.
+
+#### `validation: { <field_name:string>: <(values:object) => bool|string)> }`
+This prop helps you specify fields validation conditions and errors. Don't set it if you don't need it. The `key` (field name) part should also be present in the `initial`. The `value` is a validation function which passes all field values down. It returns an **error message** when field is invalid or just a **boolean** if you don't need messages. With `{ username: values => values.username.length === 0 }` we return a boolean which simply reports if the field is empty. This is useful when you want to set an error class. Setting up  error messages is achieved with something like that `{ username: values => values.username.length === 0 ? "This field is required" : "" }`
+
+### Enform state API
+By taking care of your form's state Enform provides you with access to it by exposing several props and methods. These are passed down to your component via the `props` object.
+
+```jsx
+<Enform initial={{ name: "" }}>
+  {props => (
+    <form />
+      ...
+    </form>
+  )}
+</Enform>
+```
+
+#### `prop.values: { <field_name:string>: <value:string>}`
+Object containing all field values. The signature is `{ key: value }` where `key` is the field name as defined in the `initial` and `value` is the current value of this element.
+
+`props.values` gets updated when using `onChange` and `clearFields`.
+
+#### `props.errors: { <field_name:string>: <value:bool|string>}`
+Object containing errors for all fields. These are either the error messages or simply a true|false value. The signature is `{ key: value }` where `key` is the field name as defined in the `initial`. On the other side `value` contains the error message returned from the validator function as defined in `validation` or true. If there is no error it should be `false` or what is returned from your validation function.
+
+
+`props.errors` gets updated when using `onChange`, `onSubmit`, `validateField`, `clearError` and `clearErrors`.
+
+#### `props.onChange: (<field_name:string>, <value:string>) => void`
+With this handler method you can set the value of a field.
+```jsx
+<Enform initial={{ email: "" }}>
+  {props => (
+    ...
+    <input onChange={e => { props.onChange("email", e.target.value) }}>
+  )}
+</Enform>
+```
+As a side effect it will also **clear** any previously set error for that field.
+
+#### `props.onSubmit: (<successCallback:function>) => void`
+By calling `props.onSubmit()` you are telling Enform to do the following: trigger validation on all fields and either set the corresponding errors or call the `successCallback` function on success. Defining this callback is up to you. It takes the `values` object as an argument.
+
+```jsx
+<Enform initial={{ email: "" }}>
+  {props => (
+    <form onSubmit={e => {
+      e.preventDefault();
+      props.onSubmit(values => { alert(values); });
+    }}>
+      ...
+    </form>
+  )}
+</Enform>
+```
+
+#### `props.isDirty: () => bool`
+If in need to know if current state of the form is dirty you can simply call `props.isDirty()`. It will return either true or false. Since it is an expensive operation Enform does't keep track of dirty state internally. It's up to you to use the function whenever needed. It performs comparison between field values and their `initial` values.
+
+#### `props.validateField: (<field_name:string>) => bool`
+Trigger validation for a single field. Ex. `props.validateField("email")`. That will call the validation function for the field (if any) and set the corresonding error message or boolean flag in `props.errors`. Common use case is if you want to validate while typing in an input field.
+
+#### `props.clearError: (<field_name:string>) => void`
+Clears the error for individual fields. Ex. `props.clearError("email")`. That will clear any error in the email field. Usually `props.onChange()` is doing it by default, but you may want to trigger validation let's say as part of `onFocus`.
+
+```jsx
+<Enform initial={{ email: "" }}>
+  {props => (
+    <input
+      onFocus={e => {
+        props.clearError("email");
+      }}
+      onChange={e => {
+        props.onChange("email", e.target.value);
+      }}
+    />
+  )}
+</Enform>
+```
+
+#### `props.clearErrors: () => void`
+Calling it will clear all errors in the form. Useful if want to reset the form. In that case you can do it as part of reset button's `onClick` handler.
+
+#### `props.clearFields: () => void`
+Clear all fields. Calling `props.clearFields` won't set the fields back to their `initial` values, but instead it will try to set each field to an empty state. This is done by evaluating the value types set as part of `initial` prop.
 
 ## How to
