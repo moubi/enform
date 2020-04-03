@@ -3,30 +3,33 @@
 
 **Enjoyable forms with React 🍿**
 
-Small (2kB) state wrapper component for React forms with no dependencies.
+<sup>**Small (2kB)** state handler component for forms in React with **no dependencies**.</sup>
 
 [![moubi](https://img.shields.io/npm/v/enform?style=flat-square)](https://www.npmjs.com/package/enform) [![moubi](https://img.shields.io/github/license/moubi/enform?style=flat-square)](LICENSE)
+
+[Usage](docs/index.md#basic-form-field-and-a-button) • [Examples](docs/index.md) • [API](docs/index.md#api) • [Contribute](#contributing) • [License](LICENSE)
 </div>
 
 `<Enform />` helps you with:
  - form validation
  - form dirty state
- - form submission and changes
- - field values and error messages
+ - form submission
+ - field values and changes
+ - error messages
 
-All these add to the frustration when working with forms in React. Enform moves the hassle out of the way. It gives you access to the form state (field values/errors) and provides few handy mathods to alter it.
+Usually these are common areas of frustration when working with forms in React. Enform moves that hassle out of the way. It gives you access to the form state (field values/errors) together with several handy mathods to modify it.
 
-Read the [docs with some live demos]().
+**✔️ Check [documentation with live demos](docs/index.md).**
 
 ## So, handling form state?
-Yes, in a beautiful way. **Working with forms in React should be straightforwad and enjoyable process. Enform tries to achieve that gial by providing you with the most common parts while remaining very small (only 2 kB gzziped ✨).**
+Yes, in a beautiful way. **Working with forms in React should be straightforwad and enjoyable process. Enform pursues that goal by providing the most common parts while remaining very small (only 2 kB gzziped ✨).**
 
 ## Install
 ```
 yarn add enform
 ```
 
-## Basic usage (a newsletter form)
+## Basic usage
 <img align="right" width="385" src="./assets/basic_example.png">
 
 ```jsx
@@ -59,15 +62,16 @@ const App = () => (
 ```
 [![Edit Basic form with enform](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/newsletter-form-with-enform-dv69b?fontsize=14&hidenavigation=1&theme=dark)
 
-View more of the intereactive [examples here]().
+**View more intereactive [examples here](docs/index.md)**.
 
 ## API
 ### Component props
 | Prop          | Type          | Required | Description |
 | ------------- | ------------- | -------- | ----------- |
-| children      | function      | yes      | Function that your need to wrap your form with. It provides access to the form state and a way to manipulate it. |
-| initial       | object        | yes      | Object with initial form field values in a form of `{ fieldName: value }` |
-| validation    | object        | no       | Validation object for your fields. It takes the form of `{ fieldName: function }` where the `function` passes down all form values and should return truthy or falsy value. Truthy is either `true` or an error message. Falsy could be either `false` or an empty string. Example: `{ username: values => values.username === "" ? "This field is required" : false }` |
+| children      | function      | yes      | Function that your need to wrap your DOM with. It accepts the `props` object to help with form state manipulation. |
+| [initial](#initial--field_namestring-initial_valueany----required)       | object        | yes      | Initial form field values in a form of `{ fieldName: value, ... }`. |
+| [validation](#validation--field_namestring-valuesobject--boolstring-)    | object        | no       | Validation for the fields. It takes the form of `{ fieldName: function, ... }` where the `function(values)` accepts all form field values and should return either an error message or truthy/falsey value. Example: `{ username: values => values.username === "" ? "This field is required" : false }`. |
+✔️ Read more about these props [here](#enform-component-props).
 
 ### State Api
 Enform exposes its handy Api by passing an `object` down to the function wrapper.
@@ -80,30 +84,52 @@ Enform exposes its handy Api by passing an `object` down to the function wrapper
   )}
 </Enform>
 ```
-**The props object contains 2 data items:**
+**The `props` object contains 2 data items:**
 |prop|Description|
 |-|-|
-| values&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |  Object with the current field values - `{ fieldName: value }`. |
-| errors&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Object with the current field errors - `{ fieldName: errorMessage }`. errorMessage is a string or boolean or  whatever you return from your validatiors. |
+| [values](#propvalues--field_namestring-valuestring)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |  Current field values - `{ fieldName: value, ... }`. |
+| [errors](#propserrors--field_namestring-valueboolstring)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Current field errors - `{ fieldName: errorMessage, ... }`. |
 
 **and these 7 methods:**
 
 |method|Description|
 |-|-|
-| onChange     |  Updates single field's value - `onChange(fieldName, value)`. The `value` is usually what you will get from `e.target.value`. **Side effects:** clear previous field error |
-| onSubmit     | Calls when submitting - `onSubmit(successCallback)`. Usually on button click or directly attached to the `<form />` itself. Your `successCallback` will only be executed if all validations pass. This callback accepts field `values` as an argument. **Side effects:** triggers validation, shows errors or call successCallback. |
-| isDirty      |  Reports if the form is dirty. It will take into account the `initial` field values you pass to Enform. |
-| validateField&nbsp;&nbsp;&nbsp;&nbsp; | Triggers validation for a single form field - `validateField(fieldName)`. It is often useful if you want to trigger validation on every single change. **Side effects:** triggers validation (display error message)  |
-| clearError    | Clears single form field's error - `clearError(fieldName)`. |
-| clearErrors   | Clears all errors in the form. |
-| clearFields   | Will try to emtpy your form elements. It does so by figuring out the type of the `initial` values. Common use case is clicking a reset button. |
+| [onChange](#propsonchange-field_namestring-valuestring--void)     |  Updates single field's value - `onChange(fieldName, value)`. The `value` is usually what what comes from `e.target.value`. **Side effects:** clears previously set field error. |
+| [onSubmit](#propsonsubmit-successcallbackfunction--void)     | `onSubmit(successCallback)`. Usually attached to a button click or directly to `<form />` onSubmit. `successCallback(values)` will only be executed if all validations pass. **Side effects:** triggers validation or calls successCallback. |
+| [isDirty](#propsisdirty---bool)      |  Reports if the form is dirty. It takes into account the `initial` field values passed to `<Enform />`. |
+| [validateField](#propsvalidatefield-field_namestring--bool)&nbsp;&nbsp;&nbsp;&nbsp; | Triggers single form field validation - `validateField(fieldName)`. |
+| [clearError](#propsclearerror-field_namestring--void)    | Clears single form field's error - `clearError(fieldName)`. |
+| [clearErrors](#propsclearerrors---void)   | Clears all errors in the form. |
+| [clearFields](#propsclearfields---void)   | Empties form elements. |
 
-`props.values` gets updated with `onChange` and `clearFields`
+`props.values` get updated with `onChange` and `clearFields` calls.
 
-`props.errors` gets updated with `onChange`, `onSubmit`, `validateField`, `clearError` and `clearErrors`
+`props.errors` get updated with `onChange`, `onSubmit`, `validateField`, `clearError` and `clearErrors` calls.
+
+✔️ See more details about [Enform's state API](#enform-state-api).
+
+## Documentation
+Docs has its own home [here](docs/index.md). It further expands on the topics covered previously. Many [examples](#examples) and [how to guides](#how-to) for variety of use cases take place on its pages too.
+
+## Development
+Run tests with `jest` in watch mode
+```
+yarn test
+```
+or no watch
+
+```
+yarn test:nowatch
+```
+
+Build with
+```
+yarn build
+```
+That will pipe `src/Enform.js` through babel and put it as `index.js` under `lib/` folder.
 
 ## Contributing
-You are welcome to open pull requests, issues with bug reports (you can use [codesandbox](https://codesandbox.io/)) and suggestions or simply tweet about Enform.
+You are welcome to open pull requests, issues with bug reports (use [codesandbox](https://codesandbox.io/)) and suggestions or simply **tweet about Enform**. Prefer to contact me directly? I will answer for sure.
 
 ## Inspiration
 Enform is inspired by my experience with form refactoring, [@jaredpalmer](https://jaredpalmer.com/)'s great work on [Formik](https://github.com/jaredpalmer/formik) and the way [@kamranahmedse](https://github.com/kamranahmedse)'s presented [driver.js](https://github.com/kamranahmedse/driver.js).
