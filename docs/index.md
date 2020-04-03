@@ -1,34 +1,33 @@
  # Documentation
 
- - Overview
- - Examples
-    - Basic form (field and a button)
-    - Newsletter form
-    - Registration form
-    - Form with dynamic elements
-    - Full-featured form
-  - API
-  - `<Enform />` component props
-    - children
-    - initial
-    - validation
-  - `<Enform />` state API
-    - values
-    - errors
-    - onChange
-    - onSubmit
-    - isDirty
-    - validateField
-    - clearError
-    - clearErrors
-    - clearFields
- - How to
-    - handle validation
-    - clear a form
-    - submit a form
-    - button state based on dirty state
-    - handle contentEditable elements
-    - handle form-like component
+ - [Overview](#overview)
+ - [Examples](#examples)
+    - [Basic form (field and a button)](#basic-form-field-and-a-button)
+    - [Newsletter form](#newsletter-form)
+    - [Registration form](#registration-form)
+    - [Form with dynamic elements](#form-with-dynamic-elements)
+    - [Full-featured form](#full-featured-form)
+  - [API](#api)
+    - [Enform component props](#enform-component-props)
+      - [initial](#initial--field_namestring-initial_valueany----required)
+      - [validation](#validation--field_namestring-valuesobject--boolstring-)
+    - [Enform state API](#enform-state-api)
+      - [props.values](#propvalues--field_namestring-valuestring)
+      - [props.errors](#propserrors--field_namestring-valueboolstring)
+      - [props.onChange](#propsonchange-field_namestring-valuestring--void)
+      - [props.onSubmit](#propsonsubmit-successcallbackfunction--void)
+      - [props.isDirty](#propsisdirty---bool)
+      - [props.validateField](#propsvalidatefield-field_namestring--bool)
+      - [props.clearError](#propsclearerror-field_namestring--void)
+      - [props.clearErrors](#propsclearerrors---void)
+      - [props.clearFields](#propsclearfields---void)
+ - [How to](#how-to)
+    - [handle validation](#handle-validation)
+    - [clear a form](#clear-a-form)
+    - [submit a form](#submit-a-form)
+    - [button state based on dirty state](#button-state-based-on-dirty-state)
+    - [handle contentEditable elements](#handle-contenteditable-elements)
+    - [handle form-like component](#handle-form-like-component)
 
 ## Overview
 Enform was born while trying to deal with forms in React repetitive times. Let's face it, things always end up the same. You start building your form components, adding some DOM and then it's time to handle interactions. The result is big state object to manage and a bunch of component methods to handle changes, submission and validation.
