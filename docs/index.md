@@ -24,7 +24,11 @@
     - clearFields
  - How to
     - handle validation
-    - ...
+    - clear a form
+    - submit a form
+    - button state based on dirty state
+    - handle contentEditable elements
+    - handle form-like component
 
 ## Overview
 Enform was born while trying to deal with forms in React repetitive times. Let's face it, things always end up the same. You start building your form components, adding some DOM and then it's time to handle interactions. The result is big state object to manage and a bunch of component methods to handle changes, submission and validation.
@@ -400,7 +404,7 @@ ___
         </label>
       </div>
       <button
-        disabled={!isDirty()}
+        disabled={!props.isDirty()}
         type="reset"
         onClick={() => {
           // Enform doesn't provide reset() hook,
@@ -501,7 +505,7 @@ By calling `props.onSubmit()` you are telling Enform to do the following: trigge
   {props => (
     <form onSubmit={e => {
       e.preventDefault();
-      props.onSubmit(values => { alert(values); });
+      props.onSubmit(values => { console.log(values); });
     }}>
       ...
     </form>
@@ -541,3 +545,192 @@ Clear all fields. Calling `props.clearFields` won't set the fields back to their
 ___
 
 ## How to
+The idea of these short guides is to elaborate a little bit more on specific areas. Something we do often with our forms - validation, reseting/submitting, button states. It will also touch non trivial uses cases like handling `contentEditables`, **third party** integrations and form with `<div />` elements.
+
+### Handle validation
+Few quick validator function examples.
+
+#### Simple error indication
+```jsx
+<Enform
+  initial={{ name: "" }}
+  validation={{ name: values => values.name.length === "" }}
+>
+```
+If name field is empty `props.errors.name` will be set to `true`. Otherwise it's going to be `false`.
+
+#### With error message
+```jsx
+<Enform
+  initial={{ name: "" }}
+  validation={{ name: values => (
+    values.name.length === "" ? "This field can not be empty" : ""
+  )}}
+>
+```
+If name field is empty the `"This field can not be empty"` message will be stored in `props.errors.name` (truthy value). Otherwise it will have an empty string (falsy value).
+
+#### Validation on field change
+```jsx
+<Enform
+  initial={{ name: "" }}
+  validation={{ name: values => values.name.length < 3 }}
+>
+  {props =>
+    <input
+      type="text"
+      value={props.values.name}
+      onChange={e => {
+        props.onChange("name", e.target.value);
+        props.validateField("name");
+      }}
+    />
+  }
+</Enform>
+```
+Our validator function for the name field will be called everytime user is typing in the field. This will cause `props.errors.name` to be updated constantly and cleared once the value reaches `3` chars in length.
+
+
+#### Password validation
+Tipical example is a registration form with a `password` and `repeatPassword` fields which need to be validated. You can also play with the [full demo of the form](https://codesandbox.io/s/registration-form-with-enform-u6up9?fontsize=14&hidenavigation=1&theme=dark).
+
+```jsx
+<Enform
+  initial={{ name: "" }}
+  validation={{
+    password: values => {
+      if (values.password.length < 6) {
+        return "Password must be at least 6 chars in length!";
+      } else if (values.password !== values.repeatPassword) {
+        return "Password doesn't match!";
+      }
+      return false;
+    },
+    repeatPassword: values =>
+      values.repeatPassword.length < 6
+        ? "Password must be at least 6 chars in length!"
+        : false
+  }}
+>
+```
+With this validation both password and repeatPassword will set error messages if the value length is less than `6`. The `props.errors.password` will also store error message when **values do not match**. This is an example on how several field values could be combined in single validator.
+___
+
+### Clear a form
+Let's see how to clear a form on a button click:
+
+```jsx
+<Enform initial={{ name: "John" }}>
+  {props =>
+    <button
+      onClick={() => {
+        props.clearErrors();
+        props.clearFields();
+      }}
+    >
+      Clear
+    </button>
+  }
+</Enform>
+```
+Clearing a form consists of two actions - **empty all fields** and **hide all errors**. Enform provides two methods which could be called on a button click - `props.clearFields` and `props.clearErrors()`. There is also a [full demo of the form](https://codesandbox.io/s/full-featured-form-with-enform-qw3tu?fontsize=14&hidenavigation=1&theme=dark) using clear button.
+___
+
+### Submit a form
+There are few ways to handle form submission with Enform.
+
+```jsx
+<Enform initial={{ name: "John" }}>
+  {props =>
+    <button onClick={() => { props.onSubmit(); }}>
+      Submit
+    </button>
+  }
+</Enform>
+```
+Call `props.onSubmit()` as part of a button `onClick` handler.
+
+or
+
+```jsx
+<Enform initial={{ name: "John" }}>
+  {props =>
+    <form onSubmit={e => {
+      e.preventDefault();
+      props.onSubmit();
+    }}>
+      ...
+    </form>
+  }
+</Enform>
+```
+Call `props.onSubmit()` as part of a form element's `onSubmit` handler. Note that in this case you may need to also prevent the form's default behavior when submitting. This is because Enform works with controlled form elements.
+
+What if you want to call an **Api endpoint** or do something with the **form values**. You can pass your own `successCallback`:
+
+```jsx
+<button onClick={() => {
+  props.onSubmit(values => {
+    console.log(values);
+    // or pass the values to your own handler
+  });
+}}>
+  Submit
+</button>
+```
+If you provide success callback function to `props.onSubmit()` it will be called only if all fields are **passing their validation**. Example could be found in [the demo here](https://codesandbox.io/s/full-featured-form-with-enform-qw3tu?fontsize=14&hidenavigation=1&theme=dark).
+___
+
+### Button state based on dirty state
+It is a common use case to enable/disable form buttons if dirty state changes. Let's see an example:
+
+```jsx
+<Enform initial={{ name: "John" }}>
+  {props =>
+    <button disabled={!props.isDirty()}>Submit</button>
+  }
+</Enform>
+```
+Here our submit button will render as disabled if form is not dirty, meaning - its fields are containing `initial` values.
+___
+
+### Handle contentEditable elements
+contentEditable elements are sometimes very quirky. You often need to additionally manage cursor position and warnings in React. Below is a basic example of `contentEditable` div:
+
+```jsx
+<Enform initial={{ name: "Click me, I'm contentEditable" }}>
+  {props => (
+    <div
+      contentEditable
+      onInput={e => {
+        props.onChange("name", e.target.innerText);
+      }}
+    >
+      {props.values.name}
+    </div>
+  )}
+</Enform>
+```
+The difference with the standard `<input />` is the `onInput` event handler, the text being in `e.target.innerText` and the value placed as a `child` of the div.
+___
+
+### Handle form-like component
+All examples so far show that Enform works with controlled elements and components. It doesn't need to know about DOM structure or field types - this is up to you. **An interesting idea emerges - is it possible to manage the state of something that is not a form? `That is possible`.** Let's see this simple example.
+
+```jsx
+<Enform initial={{ label: "I am a label!" }}>
+  {props => (
+    <label
+      onClick={() => {
+        props.onChange("label", this.state.data.label);
+      }}
+    >
+      {props.values.label}
+    </label>
+  )}
+</Enform>
+```
+In this example the `<label />` element takes it's default text from the `initial` object and updates it onClick with some data comming from the consumer component's state. Cases like these could be expanded more, but the idea is that `it should be possible to use Enform for state management of anything that deals with values and their validation`.
+___
+
+<div align="center">The end!</div>
