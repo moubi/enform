@@ -23,7 +23,7 @@ export default class Enform extends PureComponent {
       validateField: this.validateField.bind(this),
       clearError: this.clearError.bind(this),
       clearErrors: this.clearErrors.bind(this),
-      clearFields: this.clearFields.bind(this)
+      reset: this.reset.bind(this)
     };
   }
 
@@ -92,32 +92,13 @@ export default class Enform extends PureComponent {
     });
   }
 
-  clearFields() {
-    const { initial } = this.props;
-    const fieldNames = Object.keys(initial);
-    const resetValues = {};
-
-    // TODO: this needs additional research.
-    // What are the different type of values we may have.
-    fieldNames.forEach(name => {
-      if (typeof initial[name] === "string") {
-        resetValues[name] = "";
-      } else if (typeof initial[name] === "boolean") {
-        resetValues[name] = false;
-      } else if (typeof initial[name] === "number") {
-        resetValues[name] = 0;
-      } else if (initial[name] === null) {
-        resetValues[name] = null;
-      } else if (Array.isArray(initial[name])) {
-        resetValues[name] = [];
-      } else {
-        resetValues[name] = this.initial;
-      }
-    });
-
+  reset() {
     this.setState({
-      values: { ...resetValues }
+      values: {
+        ...this.props.initial
+      },
     });
+    this.clearErrors();
   }
 
   clearError(name) {
