@@ -16,11 +16,11 @@
       - [props.errors](#propserrors--field_namestring-valueboolstring)
       - [props.onChange](#propsonchange-field_namestring-valuestring--void)
       - [props.onSubmit](#propsonsubmit-successcallbackfunction--void)
+      - [props.reset](#propsreset---void)
       - [props.isDirty](#propsisdirty---bool)
       - [props.validateField](#propsvalidatefield-field_namestring--bool)
       - [props.clearError](#propsclearerror-field_namestring--void)
       - [props.clearErrors](#propsclearerrors---void)
-      - [props.clearFields](#propsclearfields---void)
  - [How to](#how-to)
     - [handle validation](#handle-validation)
     - [reset a form](#reset-a-form)
@@ -408,10 +408,9 @@ ___
         disabled={!props.isDirty()}
         type="reset"
         onClick={() => {
-          // Enform doesn't provide reset() hook,
-          // but here is how to achieve the same
-          props.clearErrors();
-          props.clearFields();
+          // Reverts fields back to initial values
+          // and clears all errors
+          props.reset();
         }}
       >
         Clear
@@ -436,7 +435,7 @@ Demonstration of Enform handling full-featured form, using all API props and met
 
 **Few interesting points:**
  - **Passing custom callback to `onSubmit`.** The handler is attached to the submit button and simply alerts all field values in pretty format.
- - **Resetting the form.** There is no `props.reset()` method, but the same effect could be achieved by combining `props.clearErrors()` and `props.clearFields()`.
+ - **Resetting the form.** With the `props.reset()` call fields are reverted back to `initial` values and all errors are cleared.
  - **Clear error on focus.** This is done by calling `props.clearError("bio")` when focusing the bio field.
  - **Validate while typing.** Calling `props.validateField("email")` as part of the `onChange` handler will trigger validation for each change.
 ___
@@ -478,12 +477,20 @@ Enform manages the form's state and provides access to it by exposing several pr
 #### `props.values: { <field_name:string>: <value:string>}`
 Object containing all field values. The signature is `{ fieldName: value }` where `fieldName` is the field name as defined in the [initial](#initial--field_namestring-initial_valueany----required) and `value` is the current value of the element.
 
-`props.values` get updated with `onChange` and `clearFields` calls.
+`props.values` get updated when calling:
+ - props.onChange
+ - props.reset
 
 #### `props.errors: { <field_name:string>: <value:bool|string>}`
 Object containing errors for all fields. These are either the error messages or simply true|false values. The signature is `{ fieldName: value }` where `fieldName` is the field name as defined in the [initial](#initial--field_namestring-initial_valueany----required). `value` contains what is returned from the validator function (error message or boolean) defined in [validation](#validation--field_namestring-valuesobject--boolstring-). In case of no error `props.errors.<field_name>` should be `false` or a falsy value returned from the validator.
 
-`props.errors` get updated with `onChange`, `onSubmit`, `validateField`, `clearError` and `clearErrors` calls.
+`props.errors` get updated when calling:
+ - props.onChange
+ - props.onSubmit
+ - props.validateField
+ - props.clearError
+ - props.clearErrors
+ - props.reset
 
 #### `props.onChange: (<field_name:string>, <value:string>) => void`
 Handler method used for setting the value of a field.
@@ -498,7 +505,7 @@ Handler method used for setting the value of a field.
   )}
 </Enform>
 ```
-As a **side effect** calling this method will also **clear** any previously set error for that field.
+As a **side effect** calling this method will also **clear** previously set error for that field.
 
 #### `props.onSubmit: (<successCallback:function>) => void`
 By calling `props.onSubmit()` Enform will do the following: **trigger validation** on all fields and either set the corresponding **errors** or **call** the `successCallback` if validation is passed. `successCallback` accepts the `values` object as an argument.
@@ -515,6 +522,9 @@ By calling `props.onSubmit()` Enform will do the following: **trigger validation
   )}
 </Enform>
 ```
+
+#### `props.reset: () => void`
+Clears all fields and errors. Calling `props.reset()` will set the fields back to their `initial` values. As a side effect it will also clear the errors as if `props.clearErrors()` was called. The following [full-featured form](#full-featured-form) uses `props.reset()` on button click.
 
 #### `props.isDirty: () => bool`
 Calling `props.isDirty()` reports if form state has changed. It does so by performing comparison between fields current and `initial` values. Since it is an expensive operation Enform does't keep track of dirty state internally. That's why isDirty is method instead.
@@ -554,10 +564,7 @@ Clears the error for a single field. (ex. `props.clearError("email")`). Calling 
 ```
 
 #### `props.clearErrors: () => void`
-Calling it will clear all errors for all fields. Could be useful when resetting the form. The [full-featured form example](#full-featured-form) demonstrates that.
-
-#### `props.clearFields: () => void`
-Clears all fields. Calling `props.clearFields` won't set the fields back to their `initial` values, but instead it will try to assign empty values. It does so by evaluating the value types in the `initial` prop. The same [full-featured form example](#full-featured-form) uses `props.clearFields` to reset a form.
+Calling this method will clear all errors for all fields.
 ___
 
 ## How to
@@ -632,23 +639,18 @@ Current validation sets error messages for both password and repeatPassword if t
 ___
 
 ### Reset a form
-Let's see how to reset a form on a button click:
+Let's see how to reset a form on button click:
 
 ```jsx
 <Enform initial={{ name: "John" }}>
   {props =>
-    <button
-      onClick={() => {
-        props.clearErrors();
-        props.clearFields();
-      }}
-    >
+    <button onClick={props.reset}>
       Clear
     </button>
   }
 </Enform>
 ```
-Resetting a form consists of - **reset all fields** and **clear all errors**. Enform splits that in two methods called on button click - `props.clearFields()` and `props.clearErrors()`. Ref to the [full form demo](https://codesandbox.io/s/full-featured-form-with-enform-qw3tu?fontsize=14&hidenavigation=1&theme=dark) for usage example.
+Resetting a form with Enform will **reset all fields** and **clear all errors**. The action is similar to reinitializing. See this [full form demo](https://codesandbox.io/s/full-featured-form-with-enform-qw3tu?fontsize=14&hidenavigation=1&theme=dark) for usage example.
 ___
 
 ### Submit a form

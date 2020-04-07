@@ -13,7 +13,7 @@
 `<Enform />` helps you with:
  - form validation
  - form dirty state
- - form submission
+ - form submission and reset
  - field values and changes
  - error messages
 
@@ -96,15 +96,15 @@ Enform exposes its handy Api by passing an `object` down to the function wrapper
 |-|-|
 | [onChange](#propsonchange-field_namestring-valuestring--void)     |  Updates single field's value - `onChange(fieldName, value)`. The `value` is usually what what comes from `e.target.value`. **Side effects:** clears previously set field error. |
 | [onSubmit](#propsonsubmit-successcallbackfunction--void)     | `onSubmit(successCallback)`. Usually attached to a button click or directly to `<form />` onSubmit. `successCallback(values)` will only be executed if all validations pass. **Side effects:** triggers validation or calls successCallback. |
+| [reset](#propsreset---void)   | Empties form elements. |
 | [isDirty](#propsisdirty---bool)      |  Reports if the form is dirty. It takes into account the `initial` field values passed to `<Enform />`. |
 | [validateField](#propsvalidatefield-field_namestring--bool)&nbsp;&nbsp;&nbsp;&nbsp; | Triggers single form field validation - `validateField(fieldName)`. |
 | [clearError](#propsclearerror-field_namestring--void)    | Clears single form field's error - `clearError(fieldName)`. |
 | [clearErrors](#propsclearerrors---void)   | Clears all errors in the form. |
-| [clearFields](#propsclearfields---void)   | Empties form elements. |
 
-`props.values` get updated with `onChange` and `clearFields` calls.
+`props.values` get updated with `onChange` and `reset` calls.
 
-`props.errors` get updated with `onChange`, `onSubmit`, `validateField`, `clearError` and `clearErrors` calls.
+`props.errors` get updated with `onChange`, `onSubmit`, `reset`, `validateField`, `clearError` and `clearErrors` calls.
 
 ✔️ See more details about [Enform's state API](#enform-state-api).
 

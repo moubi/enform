@@ -256,8 +256,8 @@ describe("Enfrom", () => {
             onSubmit,
             clearError,
             clearErrors,
-            clearFields,
-            isDirty
+            isDirty,
+            reset
           }) => (
             <div className="form">
               <div>
@@ -350,12 +350,16 @@ describe("Enfrom", () => {
               <button
                 disabled={!isDirty()}
                 className="reset"
-                onClick={() => {
-                  clearErrors();
-                  clearFields();
-                }}
+                onClick={reset}
               >
-                Clear
+                Reset
+              </button>
+              <button
+                disabled={!isDirty()}
+                className="clear-errors"
+                onClick={clearErrors}
+              >
+                Clear errors
               </button>
             </div>
           )}
@@ -496,7 +500,7 @@ describe("Enfrom", () => {
         );
       });
 
-      it("should clear all errors", () => {
+      it("should clear all errors on reset", () => {
         simulate(subject, [
           {
             type: "change",
@@ -520,7 +524,31 @@ describe("Enfrom", () => {
         expect(subject, "to contain no elements matching", ".error");
       });
 
-      it("should clear all fields", () => {
+      it("should clear all errors only", () => {
+        simulate(subject, [
+          {
+            type: "change",
+            target: "[placeholder=Email]",
+            data: {
+              target: {
+                value: "invalid_email"
+              }
+            }
+          },
+          {
+            type: "click",
+            target: ".submit"
+          },
+          {
+            type: "click",
+            target: ".clear-errors"
+          }
+        ]);
+
+        expect(subject, "to contain no elements matching", ".error");
+      });
+
+      it("should clear all fields on reset", () => {
         simulate(subject, [
           {
             type: "change",
