@@ -9,17 +9,17 @@
     - [Full-featured form](#full-featured-form)
   - [API](#api)
     - [Enform component props](#enform-component-props)
-      - [initial](#initial--field_namestring-initial_valueany----required)
-      - [validation](#validation--field_namestring-valuesobject--boolstring-)
+      - [initial](#initial--fieldname-value----required)
+      - [validation](#validation--fieldname-functionvalues--boolstring-)
     - [Enform state API](#enform-state-api)
-      - [props.values](#propsvalues--field_namestring-valuestring)
-      - [props.errors](#propserrors--field_namestring-valueboolstring)
-      - [props.onChange](#propsonchange-field_namestring-valuestring--void)
-      - [props.onSubmit](#propsonsubmit-successcallbackfunction--void)
+      - [props.values](#propsvalues--fieldname-value-)
+      - [props.errors](#propserrors--fieldname-value-)
+      - [props.onChange](#propsonchange-fieldname-value--void)
+      - [props.onSubmit](#propsonsubmit-functionvalues--void--void)
       - [props.reset](#propsreset---void)
       - [props.isDirty](#propsisdirty---bool)
-      - [props.validateField](#propsvalidatefield-field_namestring--bool)
-      - [props.clearError](#propsclearerror-field_namestring--void)
+      - [props.validateField](#propsvalidatefield-fieldname--bool)
+      - [props.clearError](#propsclearerror-fieldname--void)
       - [props.clearErrors](#propsclearerrors---void)
  - [How to](#how-to)
     - [handle validation](#handle-validation)
@@ -110,7 +110,7 @@ ___
 ```
 [![Edit Newsletter form with enform](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/newsletter-form-with-enform-t1zyk?fontsize=14&hidenavigation=1&theme=dark)
 
-In this example `validation` is set for the email field using RegEx. It will return `true` if email is invalid or `false` otherwise. All [validator functions](#validation--field_namestring-valuesobject--boolstring-) must return truthy/falsy value.
+In this example `validation` is set for the email field using RegEx. It will return `true` if email is invalid or `false` otherwise. All [validator functions](#validation--fieldname-functionvalues--boolstring-) must return truthy/falsy value.
 ___
 
 ### Registration form
@@ -454,10 +454,10 @@ Two props can be set to the component itself - `initial` and `validation`.
 </Enform>
 ```
 
-#### `initial: { <field_name:string>: <initial_value:any> }` - required
+#### `initial: { fieldName: value }` - required
 The prop is the only **required one**. It is so, because it needs to tell Enform what is the current field structure. The initial value of each field should be a valid React element's value. That means if there is a `checkbox` fx. it make sense for its initial value to be `boolean`. The structure could be something like `{ email: "", password: "", newsletter: false }`.
 
-#### `validation: { <field_name:string>: <(values:object) => bool|string)> }`
+#### `validation: { fieldName: function(values) => bool|string) }`
 It is used for specifying validation conditions and error messages. Don't set it if validation is not needed. The `key` (field name) should be the same as in the `initial`. The `value` is a validator function which accepts all field values. Validators should return an **error message** when field is invalid or just a **boolean** if no messages are needed. The following: `{ username: values => values.username.length === 0 }` returns a boolean simply telling if the field is empty. Such a condition is useful when setting an error class to the field is enough. Setting up error messages could be achieved with something like that `{ username: values => values.username.length === 0 ? "This field is required" : "" }`.
 ___
 
@@ -474,15 +474,15 @@ Enform manages the form's state and provides access to it by exposing several pr
 </Enform>
 ```
 
-#### `props.values: { <field_name:string>: <value:string>}`
-Object containing all field values. The signature is `{ fieldName: value }` where `fieldName` is the field name as defined in the [initial](#initial--field_namestring-initial_valueany----required) and `value` is the current value of the element.
+#### `props.values: { fieldName: value }`
+Object containing all field values. The signature is `{ fieldName: value }` where `fieldName` is the field name as defined in the [initial](#initial--fieldname-value----required) and `value` is the current value of the element.
 
 `props.values` get updated when calling:
  - props.onChange
  - props.reset
 
-#### `props.errors: { <field_name:string>: <value:bool|string>}`
-Object containing errors for all fields. These are either the error messages or simply true|false values. The signature is `{ fieldName: value }` where `fieldName` is the field name as defined in the [initial](#initial--field_namestring-initial_valueany----required). `value` contains what is returned from the validator function (error message or boolean) defined in [validation](#validation--field_namestring-valuesobject--boolstring-). In case of no error `props.errors.<field_name>` should be `false` or a falsy value returned from the validator.
+#### `props.errors: { fieldName: value }`
+Object containing errors for all fields. These are either the error messages or simply true|false values. `fieldName` is the same field name defined in the [initial](#initial--fieldname-value----required) while `value` is returned from the validator function (error message or boolean) defined in [validation](#validation--fieldname-functionvalues--boolstring-). In case of no error `props.errors.<fieldName>` should be `false` or any falsy value returned from the validator.
 
 `props.errors` get updated when calling:
  - props.onChange
@@ -492,7 +492,7 @@ Object containing errors for all fields. These are either the error messages or 
  - props.clearErrors
  - props.reset
 
-#### `props.onChange: (<field_name:string>, <value:string>) => void`
+#### `props.onChange: (fieldName, value) => void`
 Handler method used for setting the value of a field.
 
 ```jsx
@@ -507,7 +507,7 @@ Handler method used for setting the value of a field.
 ```
 As a **side effect** calling this method will also **clear** previously set error for that field.
 
-#### `props.onSubmit: (<successCallback:function>) => void`
+#### `props.onSubmit: (function(values) => void) => void`
 By calling `props.onSubmit()` Enform will do the following: **trigger validation** on all fields and either set the corresponding **errors** or **call** the `successCallback` if validation is passed. `successCallback` accepts the `values` object as an argument.
 
 ```jsx
@@ -529,7 +529,7 @@ Clears all fields and errors. Calling `props.reset()` will set the fields back t
 #### `props.isDirty: () => bool`
 Calling `props.isDirty()` reports if form state has changed. It does so by performing comparison between fields current and `initial` values. Since it is an expensive operation Enform does't keep track of dirty state internally. That's why isDirty is method instead.
 
-#### `props.validateField: (<field_name:string>) => bool`
+#### `props.validateField: (fieldName) => bool`
 It triggers validation for a single field (ex. `props.validateField("email")`). As a result the validator function (if any) for that field will be executed and the returned value set in `props.errors`. Common use would be if a field needs to be validated everytime user is typing.
 
 ```jsx
@@ -545,7 +545,7 @@ It triggers validation for a single field (ex. `props.validateField("email")`). 
 </Enform>
 ```
 
-#### `props.clearError: (<field_name:string>) => void`
+#### `props.clearError: (fieldName) => void`
 Clears the error for a single field. (ex. `props.clearError("email")`). Calling `props.onChange()` will do that by default, but `props.clearError` is built for other cases. An example is clearing an error as part of `onFocus`.
 
 ```jsx

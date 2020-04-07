@@ -7,7 +7,7 @@
 
 [![moubi](https://img.shields.io/npm/v/enform?style=flat-square)](https://www.npmjs.com/package/enform) [![moubi](https://img.shields.io/github/license/moubi/enform?style=flat-square)](LICENSE)
 
-[Usage](docs/index.md#basic-form-field-and-a-button) • [Examples](docs/index.md) • [API](docs/index.md#api) • [Contribute](#contributing) • [License](LICENSE)
+[Usage](docs/index.md#basic-form-field-and-a-button) • [Examples](docs/index.md#documentation) • [API](docs/index.md#api) • [Contribute](#contributing) • [License](LICENSE)
 </div>
 
 `<Enform />` helps you with:
@@ -19,7 +19,7 @@
 
 Usually these are common areas of frustration when working with forms in React. Enform moves that hassle out of the way. It gives you access to the form state (field values/errors) together with several handy mathods to modify it.
 
-**✔️ Check [documentation with live demos](docs/index.md).**
+**✔️ Check [documentation with live demos](docs/index.md#documentation).**
 
 ## So, handling form state?
 Yes, in a beautiful way. **Working with forms in React should be straightforwad and enjoyable process. Enform pursues that goal by providing the most common parts while remaining very small (only 2 kB gzziped ✨).**
@@ -62,16 +62,17 @@ const App = () => (
 ```
 [![Edit Basic form with enform](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/newsletter-form-with-enform-dv69b?fontsize=14&hidenavigation=1&theme=dark)
 
-**View more intereactive [examples here](docs/index.md)**.
+**View more intereactive [examples here](docs/index.md#documentation)**.
 
 ## API
 ### Component props
 | Prop          | Type          | Required | Description |
 | ------------- | ------------- | -------- | ----------- |
 | children      | function      | yes      | Function that your need to wrap your DOM with. It accepts the `props` object to help with form state manipulation. |
-| [initial](#initial--field_namestring-initial_valueany----required)       | object        | yes      | Initial form field values in a form of `{ fieldName: value, ... }`. |
-| [validation](#validation--field_namestring-valuesobject--boolstring-)    | object        | no       | Validation for the fields. It takes the form of `{ fieldName: function, ... }` where the `function(values)` accepts all form field values and should return either an error message or truthy/falsey value. Example: `{ username: values => values.username === "" ? "This field is required" : false }`. |
-✔️ Read more about these props [here](#enform-component-props).
+| [initial](docs/index.md#initial--fieldname-value----required)       | object        | yes      | Initial form field values in a form of `{ fieldName: value, ... }`. |
+| [validation](docs/index.md#validation--fieldname-functionvalues--boolstring-)    | object        | no       | Validation for the fields. It takes the form of `{ fieldName: function, ... }` where the `function(values)` accepts all form field values and should return either an error message or truthy/falsey value. Example: `{ username: values => values.username === "" ? "This field is required" : false }`. |
+
+✔️ Read more about these props [here](docs/index.md#enform-component-props).
 
 ### State Api
 Enform exposes its handy Api by passing an `object` down to the function wrapper.
@@ -87,29 +88,29 @@ Enform exposes its handy Api by passing an `object` down to the function wrapper
 **The `props` object contains 2 data items:**
 |prop|Description|
 |-|-|
-| [values](#propvalues--field_namestring-valuestring)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |  Current field values - `{ fieldName: value, ... }`. |
-| [errors](#propserrors--field_namestring-valueboolstring)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Current field errors - `{ fieldName: errorMessage, ... }`. |
+| [values](docs/index.md#propsvalues--fieldname-value-)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |  Current field values - `{ fieldName: value, ... }`. |
+| [errors](docs/index.md#propserrors--fieldname-value-)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Current field errors - `{ fieldName: errorMessage, ... }`. |
 
 **and these 7 methods:**
 
 |method|Description|
 |-|-|
-| [onChange](#propsonchange-field_namestring-valuestring--void)     |  Updates single field's value - `onChange(fieldName, value)`. The `value` is usually what what comes from `e.target.value`. **Side effects:** clears previously set field error. |
-| [onSubmit](#propsonsubmit-successcallbackfunction--void)     | `onSubmit(successCallback)`. Usually attached to a button click or directly to `<form />` onSubmit. `successCallback(values)` will only be executed if all validations pass. **Side effects:** triggers validation or calls successCallback. |
-| [reset](#propsreset---void)   | Empties form elements. |
-| [isDirty](#propsisdirty---bool)      |  Reports if the form is dirty. It takes into account the `initial` field values passed to `<Enform />`. |
-| [validateField](#propsvalidatefield-field_namestring--bool)&nbsp;&nbsp;&nbsp;&nbsp; | Triggers single form field validation - `validateField(fieldName)`. |
-| [clearError](#propsclearerror-field_namestring--void)    | Clears single form field's error - `clearError(fieldName)`. |
-| [clearErrors](#propsclearerrors---void)   | Clears all errors in the form. |
+| [onChange](docs/index.md#propsonchange-fieldname-value--void)     |  Updates single field's value - `onChange(fieldName, value)`. The `value` is usually what what comes from `e.target.value`. **Side effects:** clears previously set field error. |
+| [onSubmit](docs/index.md#propsonsubmit-functionvalues--void--void)     | `onSubmit(successCallback)`. Usually attached to a button click or directly to `<form />` onSubmit. `successCallback(values)` will only be executed if all validations pass. **Side effects:** triggers validation or calls successCallback. |
+| [reset](docs/index.md#propsreset---void)   | Empties form elements. |
+| [isDirty](docs/index.md#propsisdirty---bool)      |  Reports if the form is dirty. It takes into account the `initial` field values passed to `<Enform />`. |
+| [validateField](docs/index.md#propsvalidatefield-fieldname--bool)&nbsp;&nbsp;&nbsp;&nbsp; | Triggers single form field validation - `validateField(fieldName)`. |
+| [clearError](docs/index.md#propsclearerror-fieldname--void)    | Clears single form field's error - `clearError(fieldName)`. |
+| [clearErrors](docs/index.md#propsclearerrors---void)   | Clears all errors in the form. |
 
 `props.values` get updated with `onChange` and `reset` calls.
 
 `props.errors` get updated with `onChange`, `onSubmit`, `reset`, `validateField`, `clearError` and `clearErrors` calls.
 
-✔️ See more details about [Enform's state API](#enform-state-api).
+✔️ See more details about [Enform's state API](docs/index.md#enform-state-api).
 
 ## Documentation
-Docs has its own home [here](docs/index.md). It further expands on the topics covered previously. Many [examples](#examples) and [how to guides](#how-to) for variety of use cases take place on its pages too.
+Docs has its own home [here](docs/index.md#documentation). It further expands on the topics covered previously. Many [examples](docs/index.md#examples) and [how to guides](docs/index.md#how-to) for variety of use cases take place on its pages too.
 
 ## Development
 Run tests with `jest` in watch mode
