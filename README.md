@@ -64,6 +64,8 @@ const App = () => (
 
 **View more intereactive [examples here](docs/index.md#documentation)**.
 
+This [⚠️ note on re-rendering](docs/index.md#%EF%B8%8F-note-on-re-rendering) may save few hours of headache.
+
 ## API
 ### Component props
 | Prop          | Type          | Required | Description |
@@ -109,8 +111,8 @@ Enform exposes its handy Api by passing an `object` down to the function wrapper
 
 ✔️ See more details about [Enform's state API](docs/index.md#enform-state-api).
 
-## Documentation
-Docs has its own home [here](docs/index.md#documentation). It further expands on the topics covered previously. Many [examples](docs/index.md#examples) and [how to guides](docs/index.md#how-to) for variety of use cases take place on its pages too.
+## [Documentation](docs/index.md)
+Docs has its own home [here](docs/index.md#documentation). It further expands on the topics covered previously. Many [examples](docs/index.md#examples) and [how to guides](docs/index.md#how-to) for variety of use cases take place on its pages too. Ref to this [⚠️ note on re-rendering](docs/index.md#%EF%B8%8F-note-on-re-rendering) for a common pitfall case.
 
 ## Development
 Run tests with `jest` in watch mode

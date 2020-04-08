@@ -28,11 +28,12 @@
     - [disable button based on dirty state](#disable-button-based-on-dirty-state)
     - [handle contentEditable elements](#handle-contenteditable-elements)
     - [handle form-like DOM](#handle-form-like-dom)
+  - [Note on re-rendering](#%EF%B8%8F-note-on-re-rendering)
 
 ## Overview
 Enform was born while trying to deal with forms in React repetitive times with store involved in the picture. Let's face it, things always end up the same. Often the process looks like that - start building the form in existing component, some DOM is added, then it's time to handle user inputs and validation. The result is a big state object to manage and a bunch of component methods to handle changes, submission and validation.
 
-It feels like these should be somehow hidden or extracted away in another component. `<Enform />` is such a component. **It nicely hides that frustration while still keeps the power of forms in React. And it's only 2 kB ✨**.
+It feels like these should be somehow hidden or extracted away in another component. `<Enform />` is such a component. **It nicely hides that frustration while still keeps the power of forms in React. And it's only 2 kB (gzipped) ✨**.
 
 Ok, enough theory, let's see some real use cases.
 
@@ -77,6 +78,8 @@ const App = () => (
  - `validation` object defines the field should not be empty
  - `props.onSubmit` is bound to the button click. It will submit whenever validation is passed
  - the input field is fully controlled with the help of `props.values` and `props.onChange`.
+
+This [⚠️ note on re-rendering](#%EF%B8%8F-note-on-re-rendering) may save few hours of headache too.
 ___
 
 ### Newsletter form
@@ -748,6 +751,65 @@ All examples so far show how Enform works with controlled elements and component
 </Enform>
 ```
 The `<label />` element takes it's default text from the `initial` object and updates it on click with some data that comes from the consumer component's state. Such cases could be expanded further more, but the idea is `it should be possible to use Enform for state management of anything that deals with values and validation`.
+___
+
+## ⚠️ Note on re-rendering
+It is important to note that `<Enform />` **DOESN'T RE-INITIALIZE by default when `initial` values change**. It is up to the consumer component to control it.
+
+The following:
+```jsx
+class ConsumerComponent extends Component {
+  constructor(props) {
+    super(props);
+    // name with default value of ""
+    this.state = { name: "" };
+  }
+
+  componentDidMount() {
+    // An API call that will set name to "Justin Case"
+    this.getName().then(name => {
+      this.setState({ name });
+    });
+  }
+
+  render() {
+    <Enform initial={{ name: this.state.name }}>
+      {props => (
+        {/* ⚠️ NOTE: the input will still render "" */}
+        <input value={props.values.name} />
+      )}
+    </Enform>
+  }
+}
+```
+won't render `<input />` with `"Justing Case"` value, but with an empty string instead. **Why?** Simply because Enform does not have any internal mechanism to update its state when `initial` prop changes, causing it to keep the old value of `name` in `props.values.name`. The API call will update `name` to `"Justin Case"` and as a result `<ConsumerComponent />` will re-render, but `props.values.name` will remain `""`.
+
+### What is the solution?
+As a [recommended technique](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key)  the special `key` prop could be used forcing Enform to update. Let's see the changes in the `render()` method:
+
+```jsx
+render() {
+  <Enform
+    {/* key's value will change causing re-initializing */}
+    key={this.state.name}
+    initial={{ name: this.state.name }}
+  >
+    {props => (
+      {/* input will render "Justin Case" */}
+      <input value={props.values.name} />
+    )}
+  </Enform>
+}
+```
+The only differece is that now the `key` prop is set to `this.state.name` telling React to *create a new component instance rather than update the current one*.
+
+### Why doesn't Enform do it itself?
+The reasoning is based on these limitations:
+ - too risky
+ - too expensive
+ - too much magic
+
+ A possible implementation would involve `getDerivedStateFromProps` and deep comparison of `initial` prop values. That is an expensive operation. It may also lead to unexpected behavior difficult to debug being covered in the component.
 ___
 
 <div align="center">The end!</div>
