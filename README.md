@@ -22,7 +22,7 @@ Usually these are common areas of frustration when working with forms in React. 
 **✔️ Check [documentation with live demos](docs/index.md#documentation).**
 
 ## So, handling form state?
-Yes, in a beautiful way. **Working with forms in React should be straightforwad and enjoyable process. Enform pursues that goal by providing the most common parts while remaining very small (only 2 kB gzziped ✨).**
+Yes, in a beautiful way. **Working with forms in React should be straightforwad and enjoyable process. Enform pursues that goal by providing the most common parts while remaining very small (only 2 kB gzip ✨).**
 
 ## Install
 ```
