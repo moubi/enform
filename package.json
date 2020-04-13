@@ -19,6 +19,7 @@
     "@babel/preset-env": "^7.8.6",
     "@babel/preset-react": "^7.8.3",
     "babel-jest": "^25.1.0",
+    "babel-minify": "^0.5.1",
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.19.0",
     "jest": "^25.1.0",
@@ -29,11 +30,14 @@
     "unexpected-dom": "^4.11.1",
     "unexpected-reaction": "^2.6.0",
     "unexpected-sinon": "^10.11.2",
-    "prettier": "~1.19.1"
+    "prettier": "~1.19.1",
+    "gzip-size-cli": "^3.0.0"
   },
   "scripts": {
-    "build": "mkdir -p lib && babel ./src --out-file ./lib/index.js",
-    "prepublish": "rm -rf ./lib && npm run build",
+    "build": "mkdir -p lib && babel ./src --out-file ./lib/index.js --presets minify",
+    "size": "gzip-size ./lib/index.js",
+    "prepare": "rm -rf ./lib && npm run build",
+    "prepublishOnly": "npm run test:nowatch",
     "test": "jest --watch",
     "test:nowatch": "jest",
     "lint": "eslint ."
