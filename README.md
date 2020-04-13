@@ -3,7 +3,7 @@
 
 **Enjoyable forms with React 🍿**
 
-<sup>**Small (2kB)** state handler component for forms in React with **no dependencies**.</sup>
+<sup>**Small (1.7kB)** state handler component for forms in React with **no dependencies**.</sup>
 
 [![moubi](https://img.shields.io/npm/v/enform?style=flat-square)](https://www.npmjs.com/package/enform) [![moubi](https://img.shields.io/github/license/moubi/enform?style=flat-square)](LICENSE)
 
@@ -22,7 +22,7 @@ Usually these are common areas of frustration when working with forms in React. 
 **✔️ Check [documentation with live demos](docs/index.md#documentation).**
 
 ## So, handling form state?
-Yes, in a beautiful way. **Working with forms in React should be straightforwad and enjoyable process. Enform pursues that goal by providing the most common parts while remaining very small (only 2 kB gzip ✨).**
+Yes, in a beautiful way. **Working with forms in React should be straightforwad and enjoyable process. Enform pursues that goal by providing the most common parts while remaining very small (only 1.7kB gzip ✨).**
 
 ## Install
 ```
@@ -123,6 +123,10 @@ or no watch
 
 ```
 yarn test:nowatch
+```
+Get gzip size by
+```
+yarn size
 ```
 
 Build with

@@ -33,7 +33,7 @@
 ## Overview
 Enform was born while trying to deal with forms in React repetitive times with store involved in the picture. Let's face it, things always end up the same. Often the process looks like that - start building the form in existing component, some DOM is added, then it's time to handle user inputs and validation. The result is a big state object to manage and a bunch of component methods to handle changes, submission and validation.
 
-It feels like these should be somehow hidden or extracted away in another component. `<Enform />` is such a component. **It nicely hides that frustration while still keeps the power of forms in React. And it's only 2 kB (gzip) ✨**.
+It feels like these should be somehow hidden or extracted away in another component. `<Enform />` is such a component. **It nicely hides that frustration while still keeps the power of forms in React. And it's only 1.7kB (gzip) ✨**.
 
 Ok, enough theory, let's see some real use cases.
 
@@ -117,7 +117,10 @@ In this example `validation` is set for the email field using RegEx. It will ret
 ___
 
 ### Registration form
-<img align="right" width="385" src="../assets/registration_form.png">
+<img width="400" src="../assets/registration_form.png">
+
+<details>
+<summary><strong>Expand code snippet</strong></summary>
 
 ```jsx
 <Enform
@@ -166,6 +169,8 @@ ___
   )}
 </Enform>
 ```
+</details>
+
 [![Edit Registration form with enform](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/registration-form-with-enform-u6up9?fontsize=14&hidenavigation=1&theme=dark)
 
 This example is shortened, so that it's easy to focus on two interesting parts - **password validation** and **clearing errors**. Take a look at the [full demo in the codesandbox](https://codesandbox.io/s/registration-form-with-enform-u6up9?fontsize=14&hidenavigation=1&theme=dark).
@@ -176,7 +181,10 @@ This registration form displays error messages as well. In order that to work ea
 ___
 
 ### Form with dynamic elements
-<img align="right" width="385" src="../assets/dynamic_form.png">
+<img width="400" src="../assets/dynamic_form.png">
+
+<details>
+<summary><strong>Expand code snippet</strong></summary>
 
 ```jsx
 <Enform
@@ -230,6 +238,8 @@ ___
   )}
 </Enform>
 ```
+</details>
+
 [![Edit Dynamic form fields with enform](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/dynamic-form-fields-with-enform-bnho9?fontsize=14&hidenavigation=1&theme=dark)
 
 Enfrom does not automatically handle dynamic form elements (adding or removing felds), but it is possible to make it aware of such changes with few adjustments. The example above is a short version of the [codesandbox demo](https://codesandbox.io/s/dynamic-form-fields-with-enform-bnho9?fontsize=14&hidenavigation=1&theme=dark).
@@ -240,7 +250,10 @@ Next logical step would be to **update** the `initial` and `validation` props wi
 ___
 
 ### Full-featured form
-<img align="right" width="385" src="../assets/fullfeatured_form.png">
+<img width="400" src="../assets/fullfeatured_form.png">
+
+<details>
+<summary><strong>Expand code snippet</strong></summary>
 
 ```jsx
 <Enform
@@ -432,6 +445,8 @@ ___
   )}
 </Enform>
 ```
+</details>
+
 [![Edit Full-featured form with enform](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/full-featured-form-with-enform-qw3tu?fontsize=14&hidenavigation=1&theme=dark)
 
 Demonstration of Enform handling full-featured form, using all API props and methods.
