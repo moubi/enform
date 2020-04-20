@@ -1,33 +1,31 @@
 <div align="center">
-<h1>Enform</h1>
+<a id="enform" href="#enform">
+  <img align="center" width="256" src="./assets/logo.svg">
+</a>
 
-**Enjoyable forms with React 🍿**
+<h3>Enjoyable forms with React</h3>
 
-<sup>**Small (1.7kB)** state handler component for forms in React with **no dependencies**.</sup>
-
-[![moubi](https://img.shields.io/npm/v/enform?style=flat-square)](https://www.npmjs.com/package/enform) [![moubi](https://img.shields.io/github/license/moubi/enform?style=flat-square)](LICENSE)
+[![moubi](https://img.shields.io/circleci/build/gh/moubi/enform?label=circleci&style=flat-square)](https://circleci.com/gh/moubi/swipeable-react)
+[![moubi](https://img.shields.io/npm/v/enform?style=flat-square)](https://www.npmjs.com/package/enform)
+[![moubi](https://img.shields.io/static/v1?style=flat-square&label=gzip%20size&message=1.7%20kB&color=green)](#development)
+[![moubi](https://img.shields.io/github/license/moubi/enform?style=flat-square)](LICENSE)
 
 [Usage](docs/index.md#basic-form-field-and-a-button) • [Examples](docs/index.md#documentation) • [API](docs/index.md#api) • [Contribute](#contributing) • [License](LICENSE)
 </div>
 
-`<Enform />` helps you with:
+#### `<Enform />` helps you manage:
  - form validation
  - form dirty state
  - form submission and reset
  - field values and changes
  - error messages
 
-Usually these are common areas of frustration when working with forms in React. Enform moves that hassle out of the way. It gives you access to the form state (field values/errors) together with several handy mathods to modify it.
+Forms in React are common source of frustration and code repetition. Enform moves that hassle out of the way.
 
-**✔️ Check [documentation with live demos](docs/index.md#documentation).**
+**✔️ Check the [docs with live demos](docs/index.md#documentation) or jump to the [basic usage](#basic-usage).**
 
 ## So, handling form state?
-Yes, in a beautiful way. **Working with forms in React should be straightforwad and enjoyable process. Enform pursues that goal by providing the most common parts while remaining very small (only 1.7kB gzip ✨).**
-
-## Install
-```
-yarn add enform
-```
+Yes, in a beautiful way. Working with forms in React could be turned into straightforwad and enjoyable process. **`<Enform />` makes that possible "the React way" by providing intuitive access to the form state (field values/errors) together with a handy set of API methods to modify it.**
 
 ## Basic usage
 <img align="right" width="385" src="./assets/basic_example.png">
@@ -65,6 +63,11 @@ const App = () => (
 **View more intereactive [examples here](docs/index.md#documentation)**.
 
 This [⚠️ note on re-rendering](docs/index.md#%EF%B8%8F-note-on-re-rendering) may save few hours of headache.
+
+## Install
+```
+yarn add enform
+```
 
 ## API
 ### Component props
@@ -136,7 +139,9 @@ yarn build
 That will pipe `src/Enform.js` through babel and put it as `index.js` under `lib/` folder.
 
 ## Contributing
-You are welcome to open pull requests, issues with bug reports (use [codesandbox](https://codesandbox.io/)) and suggestions or simply **tweet about Enform**. Prefer to contact me directly? I will answer for sure.
+You are welcome to open pull requests, issues with bug reports (use [codesandbox](https://codesandbox.io/)) and suggestions or simply **tweet about Enform**. Contact me directly if that's preferable?
+
+**Immediate and fun contrubution:** help create more usable examples. Is it a full-fetured form, third party integration or a filter form with bunch of options - feel free fork the [basic form in codesandbox](https://codesandbox.io/s/basic-form-with-enform-dv69b).
 
 ## Inspiration
 Enform is inspired by my experience with form refactoring, [@jaredpalmer](https://jaredpalmer.com/)'s great work on [Formik](https://github.com/jaredpalmer/formik) and the way [@kamranahmedse](https://github.com/kamranahmedse)'s presented [driver.js](https://github.com/kamranahmedse/driver.js).
