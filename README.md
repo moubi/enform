@@ -3,7 +3,7 @@
   <img align="center" width="256" src="./assets/logo.svg">
 </a>
 
-<h3>Enjoyable forms with React</h3>
+<h3>Handle React forms with joy</h3>
 
 [![moubi](https://img.shields.io/circleci/build/gh/moubi/enform?label=circleci&style=flat-square)](https://circleci.com/gh/moubi/swipeable-react)
 [![moubi](https://img.shields.io/npm/v/enform?style=flat-square)](https://www.npmjs.com/package/enform)
