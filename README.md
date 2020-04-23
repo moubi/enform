@@ -7,7 +7,7 @@
 
 [![moubi](https://img.shields.io/circleci/build/gh/moubi/enform?label=circleci&style=flat-square)](https://circleci.com/gh/moubi/swipeable-react)
 [![moubi](https://img.shields.io/npm/v/enform?style=flat-square)](https://www.npmjs.com/package/enform)
-[![moubi](https://img.shields.io/static/v1?style=flat-square&label=gzip%20size&message=1.7%20kB&color=green)](#development)
+[![moubi](https://img.shields.io/static/v1?style=flat-square&label=gzip%20size&message=1.3%20kB&color=green)](#development)
 [![moubi](https://img.shields.io/github/license/moubi/enform?style=flat-square)](LICENSE)
 
 [Usage](docs/index.md#basic-form-field-and-a-button) • [Examples](docs/index.md#documentation) • [API](docs/index.md#api) • [Contribute](#contributing) • [License](LICENSE)
