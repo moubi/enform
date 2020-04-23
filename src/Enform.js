@@ -1,4 +1,4 @@
-import { PureComponent } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 
 const errorsFromInitialValues = initial =>
@@ -7,70 +7,42 @@ const errorsFromInitialValues = initial =>
     {}
   );
 
-export default class Enform extends PureComponent {
-  constructor(props) {
-    super(props);
+export default function Enform({ initial, validation, children }) {
+  const [values, setValues] = useState({ ...initial });
+  const [errors, setErrors] = useState(() => errorsFromInitialValues(initial));
 
-    this.state = {
-      values: { ...props.initial },
-      errors: { ...errorsFromInitialValues(props.initial) }
-    };
-
-    this.handlers = {
-      onChange: this.onChange.bind(this),
-      onSubmit: this.onSubmit.bind(this),
-      isDirty: this.isDirty.bind(this),
-      validateField: this.validateField.bind(this),
-      clearError: this.clearError.bind(this),
-      clearErrors: this.clearErrors.bind(this),
-      reset: this.reset.bind(this)
-    };
-  }
-
-  isDirty() {
-    const { initial } = this.props;
+  function isDirty() {
     const fields = Object.keys(initial);
-    return fields.some(field => initial[field] !== this.state.values[field]);
+    return fields.some(field => initial[field] !== values[field]);
   }
 
-  validate(onValid = () => {}) {
-    const { validation } = this.props;
+  function validate(onValid = () => {}) {
     if (!validation) return true;
-    const { values, errors } = this.state;
     const newErrors = {};
 
     for (let i in validation) {
       newErrors[i] = validation[i](values);
     }
 
-    this.setState(
-      {
-        errors: {
-          ...errors,
-          ...newErrors
-        }
-      },
-      () => {
-        if (this.isValid()) {
-          onValid(this.state.values);
-        }
-      }
-    );
+    const isValid = !Object.values(newErrors).some(err => err);
+
+    setErrors({
+      ...errors,
+      ...newErrors
+    });
+
+    if (isValid) {
+      onValid(values);
+    }
   }
 
-  validateField(name) {
-    const { values, errors } = this.state;
-
+  function validateField(name) {
     if (typeof values[name] !== "undefined") {
-      const { validation } = this.props;
-
       if (typeof validation[name] === "function") {
         const isInvalid = validation[name](values);
-        this.setState({
-          errors: {
-            ...errors,
-            [name]: isInvalid
-          }
+        setErrors({
+          ...errors,
+          [name]: isInvalid
         });
         // Returning the oposite: is the field valid
         return !isInvalid;
@@ -79,67 +51,55 @@ export default class Enform extends PureComponent {
     }
   }
 
-  isValid() {
-    const { errors } = this.state;
-    return !Object.values(errors).some(err => err);
+  function clearErrors() {
+    setErrors(errorsFromInitialValues(initial));
   }
 
-  clearErrors() {
-    this.setState({
-      errors: {
-        ...errorsFromInitialValues(this.props.initial)
-      }
-    });
+  function reset() {
+    setValues({ ...initial });
+    clearErrors();
   }
 
-  reset() {
-    this.setState({
-      values: {
-        ...this.props.initial
-      },
-    });
-    this.clearErrors();
-  }
-
-  clearError(name) {
+  function clearError(name) {
     // Use an updater function here since this method is often used in
     // combination with onChange(). Both are setting state, so we don't
     // want to lose changes.
-    this.setState(prevState => ({
-      errors: {
-        ...prevState.errors,
-        [name]: false
-      }
+    setErrors(prevErrors => ({
+      ...prevErrors,
+      [name]: false
     }));
   }
 
-  onSubmit(submitCallback) {
-    this.validate(values => {
+  function onSubmit(submitCallback) {
+    validate(values => {
       if (typeof submitCallback === "function") {
         submitCallback(values);
       }
     });
   }
 
-  onChange(name, value) {
-    this.setState({
-      values: {
-        ...this.state.values,
-        [name]: value
-      },
-      errors: {
-        ...this.state.errors,
-        [name]: false
-      }
+  function onChange(name, value) {
+    setValues({
+      ...values,
+      [name]: value
     });
+    setErrors(prevErrors => ({
+      ...prevErrors,
+      [name]: false
+    }));
   }
 
-  render() {
-    const { values, errors } = this.state;
-    const { children } = this.props;
-
-    return children({ values, errors, ...this.handlers });
-  }
+  return children({
+    values,
+    errors,
+    onChange,
+    onSubmit,
+    isDirty,
+    validateField,
+    clearError,
+    clearErrors,
+    reset
+  });
 }
 
 Enform.propTypes = {
