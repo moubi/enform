@@ -9,7 +9,7 @@ const errorsFromInitialValues = initial =>
 
 export default function Enform({ initial, validation, children }) {
   const [values, setValues] = useState({ ...initial });
-  const [errors, setErrors] = useState({ ...errorsFromInitialValues(initial) });
+  const [errors, setErrors] = useState(() => errorsFromInitialValues(initial));
 
   function isDirty() {
     const fields = Object.keys(initial);
@@ -52,7 +52,7 @@ export default function Enform({ initial, validation, children }) {
   }
 
   function clearErrors() {
-    setErrors({ ...errorsFromInitialValues(initial) });
+    setErrors(errorsFromInitialValues(initial));
   }
 
   function reset() {
@@ -83,10 +83,10 @@ export default function Enform({ initial, validation, children }) {
       ...values,
       [name]: value
     });
-    setErrors({
-      ...errors,
+    setErrors(prevErrors => ({
+      ...prevErrors,
       [name]: false
-    });
+    }));
   }
 
   return children({
