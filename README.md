@@ -1,6 +1,6 @@
 <div align="center">
 <a id="enform" href="#enform">
-  <img align="center" width="256" src="./assets/logo.svg">
+  <img align="center" width="256" src="./assets/logo.png">
 </a>
 
 <h3>Handle React forms with joy</h3>
