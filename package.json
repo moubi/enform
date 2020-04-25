@@ -2,7 +2,7 @@
   "name": "enform",
   "version": "2.0.0",
   "main": "lib/index.js",
-  "description": "Enjoyable forms with React!",
+  "description": "Handle React forms with joy!",
   "homepage": "https://github.com/moubi/enform#readme",
   "author": "Miroslav Nikolov",
   "license": "MIT",
@@ -10,6 +10,17 @@
     "type": "git",
     "url": "https://github.com/moubi/enform"
   },
+  "keywords": [
+    "react",
+    "form",
+    "forms",
+    "validation",
+    "submit",
+    "onchange",
+    "state",
+    "fields",
+    "state-management"
+  ],
   "dependencies": {
     "react": "16.13.0",
     "react-dom": "16.13.0"
