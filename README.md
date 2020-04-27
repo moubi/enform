@@ -142,7 +142,7 @@ yarn build
 That will pipe `src/Enform.js` through babel and put it as `index.js` under `lib/` folder.
 
 ## Contributing
-You are welcome to open pull requests, issues with bug reports (use [codesandbox](https://codesandbox.io/)) and suggestions or simply **tweet about Enform**. Contact me directly if that's preferable?
+You are welcome to open pull requests, issues with bug reports (use [codesandbox](https://codesandbox.io/)) and suggestions or simply **tweet about Enform**. Check the relavant [guides here](CONTRIBUTING.md).
 
 **Immediate and fun contrubution:** help create more usable examples. Is it a full-fetured form, third party integration or a filter form with bunch of options - feel free fork the [basic form in codesandbox](https://codesandbox.io/s/basic-form-with-enform-dv69b).
 
