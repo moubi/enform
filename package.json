@@ -21,10 +21,6 @@
     "fields",
     "state-management"
   ],
-  "dependencies": {
-    "react": "16.13.0",
-    "react-dom": "16.13.0"
-  },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/preset-env": "^7.8.6",
@@ -34,6 +30,8 @@
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.19.0",
     "jest": "^25.1.0",
+    "react": "16.13.0",
+    "react-dom": "16.13.0",
     "react-dom-testing": "^1.5.0",
     "react-test-renderer": "^16.13.0",
     "sinon": "9.0.0",
@@ -43,6 +41,9 @@
     "unexpected-sinon": "^10.11.2",
     "prettier": "~1.19.1",
     "gzip-size-cli": "^3.0.0"
+  },
+  "peerDependencies": {
+    "react": ">= 16.8.0"
   },
   "scripts": {
     "build": "mkdir -p lib && babel ./src --out-file ./lib/index.js --presets minify",

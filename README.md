@@ -72,6 +72,11 @@ This [⚠️ note on re-rendering](docs/index.md#%EF%B8%8F-note-on-re-rendering)
 yarn add enform
 ```
 
+### Requirements ✅
+Enform is using React hooks ↩ as per `v2.0.0`.
+
+Consumer projects should have <kbd>react >= 16.8.0</kbd> (the one with hooks) in order to use it.
+
 ## API
 ### Component props
 | Prop          | Type          | Required | Description |
