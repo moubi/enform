@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 const errorsFromInitialValues = initial =>
@@ -10,6 +10,12 @@ const errorsFromInitialValues = initial =>
 export default function Enform({ initial, validation, children }) {
   const [values, setValues] = useState({ ...initial });
   const [errors, setErrors] = useState(() => errorsFromInitialValues(initial));
+
+  useEffect(() => {
+    setValues({ ...initial });
+    setErrors(errorsFromInitialValues(initial));
+    // Remember: shallow camparison will be used by default
+  }, [initial]);
 
   function isDirty() {
     const fields = Object.keys(initial);
