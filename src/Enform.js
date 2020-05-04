@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 const errorsFromInitialValues = initial =>
@@ -10,10 +10,18 @@ const errorsFromInitialValues = initial =>
 export default function Enform({ initial, validation, children }) {
   const [values, setValues] = useState({ ...initial });
   const [errors, setErrors] = useState(() => errorsFromInitialValues(initial));
+  const ref = useRef(initial);
 
+  // Shallow comparison is not enough.
+  // Can not count on it, because initial object could be created
+  // on every render or just once initially with updates on its props
+  // TODO: consider deep comparison like Formik
   useEffect(() => {
-    setValues({ ...initial });
-    setErrors(errorsFromInitialValues(initial));
+    if (JSON.stringify(initial) !== JSON.stringify(ref.current)) {
+      setValues({ ...initial });
+      setErrors(errorsFromInitialValues(initial));
+      ref.current = initial;
+    }
     // Remember: shallow camparison will be used by default
   }, [initial]);
 
