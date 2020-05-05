@@ -16,14 +16,12 @@ export default function Enform({ initial, validation, children }) {
   // Can not count on it, because initial object could be created
   // on every render or just once initially with updates on its props
   // TODO: consider deep comparison like Formik
-  useEffect(() => {
-    if (JSON.stringify(initial) !== JSON.stringify(ref.current)) {
-      setValues({ ...initial });
-      setErrors(errorsFromInitialValues(initial));
-      ref.current = initial;
-    }
-    // Remember: shallow camparison will be used by default
-  }, [initial]);
+  // This condition now works as getDerivedStateFromProps
+  if (JSON.stringify(initial) !== JSON.stringify(ref.current)) {
+    setValues({ ...initial });
+    setErrors(errorsFromInitialValues(initial));
+    ref.current = initial;
+  }
 
   function isDirty() {
     const fields = Object.keys(initial);
