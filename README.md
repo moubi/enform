@@ -65,7 +65,7 @@ const App = () => (
 
 **View more intereactive [examples here](docs/index.md#documentation)**.
 
-This [⚠️ note on re-rendering](docs/index.md#%EF%B8%8F-note-on-re-rendering) may save few hours of headache.
+This [⚠️ note on re-rendering](docs/index.md#%EF%B8%8F-note-on-re-rendering) may be useful in the scenario where default values in `initial` prop change between renders, but the actual object passed remain the same (by `ref`).
 
 ## Install
 ```
