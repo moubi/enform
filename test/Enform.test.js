@@ -1,6 +1,7 @@
 import expect, {
   getInstance,
-  simulate
+  simulate,
+  PropUpdater
 } from "./utils/unexpected-react";
 import React from "react";
 import sinon from "sinon";
@@ -19,6 +20,81 @@ describe("Enfrom", () => {
       "to exhaustively satisfy",
       <input type="text" value="" onChange={expect.it("to be a function")} />
     );
+  });
+
+  it("should render with non empty initial value", () => {
+    expect(
+      <Enfrom initial={{ username: "jason" }}>
+        {({ values }) => (
+          <input type="text" value={values.username} onChange={() => {}} />
+        )}
+      </Enfrom>,
+      "to exhaustively satisfy",
+      <input
+        type="text"
+        value="jason"
+        onChange={expect.it("to be a function")}
+      />
+    );
+  });
+
+  // TODO: This could be fixed with deep equal comparison, which is not desired
+  it("should NOT update default values when initial prop changes, but remains the same ref", () => {
+    const props = {
+      change: false,
+      initial: { username: "" }
+    };
+    const updatedProps = {
+      change: true,
+      initial: props.initial
+    }
+
+    function A({ initial, change }) {
+      // A way to simulate change in the initial prop while
+      // keep ref to the same object
+      if (change) {
+        initial.username = "john";
+      }
+
+      return (
+        <Enfrom initial={initial}>
+          {({ values }) => (
+            <input type="text" value={values.username} onChange={() => {}} />
+          )}
+        </Enfrom>
+      );
+    }
+
+    const { applyPropsUpdate, subject } = getInstance(
+      <PropUpdater propsUpdate={updatedProps}>
+        <A {...props} />
+      </PropUpdater>
+    );
+
+    applyPropsUpdate();
+
+    // Still displays the firstly set empty username
+    expect(subject, "queried for first", "input", "to have attributes", {
+      value: ""
+    });
+  });
+
+  it("should update default values when initial prop changes", () => {
+    const { applyPropsUpdate, subject } = getInstance(
+      <PropUpdater propsUpdate={{ initial: { username: "john" } }}>
+        <Enfrom initial={{ username: "" }}>
+          {({ values }) => (
+            <input type="text" value={values.username} onChange={() => {}} />
+          )}
+        </Enfrom>
+      </PropUpdater>
+    );
+
+    applyPropsUpdate();
+
+    expect(subject, "queried for first", "input", "to have attributes", {
+      value: "john"
+    });
   });
 
   describe("with a single field", () => {
@@ -53,22 +129,6 @@ describe("Enfrom", () => {
           )}
         </Enfrom>
       ).subject;
-    });
-
-    it("should render with non empty initial value", () => {
-      expect(
-        <Enfrom initial={{ username: "jason" }}>
-          {({ values }) => (
-            <input type="text" value={values.username} onChange={() => {}} />
-          )}
-        </Enfrom>,
-        "to exhaustively satisfy",
-        <input
-          type="text"
-          value="jason"
-          onChange={expect.it("to be a function")}
-        />
-      );
     });
 
     it("should update the value", () => {
