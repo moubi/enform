@@ -769,26 +769,48 @@ The `<label />` element takes it's default text from the `initial` object and up
 ___
 
 ## ⚠️ Note on re-rendering
-It is important to note that `<Enform />` **DOESN'T RE-INITIALIZE by default when `initial` values change**. It is up to the consumer component to control it.
+It is important to note that `<Enform />` **will do its best to re-render when `initial` values change**. That is done by comparing the current and previous value of `initial` by ref.
 
-The following:
+Usage like this is **guaranteed** to work:
+```jsx
+class ConsumerComponent extends Component {
+  ...
+
+  render() {
+    {/* newly created initial object is passed on each render */}
+    <Enform initial={{ name: this.state.name }}>
+      {props => (
+        {/* input will render correct value whenever state changes */}
+        <input value={props.values.name} />
+      )}
+    </Enform>
+  }
+}
+```
+
+The following, though, may not work:
 ```jsx
 class ConsumerComponent extends Component {
   constructor(props) {
     super(props);
+    // Defining it just for the sake of causing re-render
+    this.state = { loading: false };
     // name with default value of ""
-    this.state = { name: "" };
+    this.initial = { name: "" };
   }
 
   componentDidMount() {
-    // An API call that will set name to "Justin Case"
+    this.setState({ loading: true });
+
     this.getName().then(name => {
-      this.setState({ name });
+      this.setState({ loading: false });
+      // An API call that will set name to "Justin Case"
+      this.initial.name = name;
     });
   }
 
   render() {
-    <Enform initial={{ name: this.state.name }}>
+    <Enform initial={this.initial}>
       {props => (
         {/* ⚠️ NOTE: the input will still render "" */}
         <input value={props.values.name} />
@@ -797,17 +819,30 @@ class ConsumerComponent extends Component {
   }
 }
 ```
-won't render `<input />` with `"Justing Case"` value, but with an empty string instead. **Why?** Simply because Enform does not have any internal mechanism to update its state when `initial` prop changes, causing it to keep the old value of `name` in `props.values.name`. The API call will update `name` to `"Justin Case"` and as a result `<ConsumerComponent />` will re-render, but `props.values.name` will remain `""`.
+In this situation Enform won't update the `<input />` with `"Justing Case"` value. It will remain empty. **Why?** Simply because the same object by ref (`this.initial`) is passed to Enform causing it to think there are no changes for the default values.
 
 ### What is the solution?
-As a [recommended technique](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key)  the special `key` prop could be used forcing Enform to update. Let's see the changes in the `render()` method:
+**First** possible one is to recreate the `initial` prop object on each render:
+```jsx
+render() {
+  {/* Construct a new object out of this.initial */}
+  <Enform initial={{ ...this.initial }}>
+    {props => (
+      {/* input will render "Justin Case" */}
+      <input value={props.values.name} />
+    )}
+  </Enform>
+}
+```
+
+**Second** [recommended technique](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key) would be to use the special `key` prop forcing that way Enform to update. Let's see the changes in the `render()` method:
 
 ```jsx
 render() {
   <Enform
     {/* key's value will change causing re-initializing */}
     key={this.state.name}
-    initial={{ name: this.state.name }}
+    initial={this.initial}
   >
     {props => (
       {/* input will render "Justin Case" */}
@@ -817,14 +852,6 @@ render() {
 }
 ```
 The only differece is that now the `key` prop is set to `this.state.name` telling React to *create a new component instance rather than update the current one*.
-
-### Why doesn't Enform do it itself?
-The reasoning is based on these limitations:
- - too risky
- - too expensive
- - too much magic
-
- A possible implementation would involve `getDerivedStateFromProps` and deep comparison of `initial` prop values. That is an expensive operation. It may also lead to unexpected behavior difficult to debug being covered in the component.
 ___
 
 <div align="center">The end!</div>

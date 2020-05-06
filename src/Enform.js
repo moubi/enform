@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 const errorsFromInitialValues = initial =>
@@ -10,6 +10,16 @@ const errorsFromInitialValues = initial =>
 export default function Enform({ initial, validation, children }) {
   const [values, setValues] = useState({ ...initial });
   const [errors, setErrors] = useState(() => errorsFromInitialValues(initial));
+  const ref = useRef(initial);
+
+  useEffect(() => {
+    // That should cover most of the cases
+    if (initial !== ref.current) {
+      setValues({ ...initial });
+      setErrors(errorsFromInitialValues(initial));
+      ref.current = initial;
+    }
+  }, [initial])
 
   function isDirty() {
     const fields = Object.keys(initial);
