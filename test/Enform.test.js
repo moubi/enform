@@ -3,7 +3,7 @@ import expect, {
   simulate,
   PropUpdater
 } from "./utils/unexpected-react";
-import React from "react";
+import React, { useState } from "react";
 import sinon from "sinon";
 
 import Enfrom from "../src/Enform";
@@ -49,7 +49,7 @@ describe("Enfrom", () => {
       initial: props.initial
     }
 
-    function A({ initial, change }) {
+    function ParentComponent({ initial, change }) {
       // A way to simulate change in the initial prop while
       // keep ref to the same object
       if (change) {
@@ -67,7 +67,7 @@ describe("Enfrom", () => {
 
     const { applyPropsUpdate, subject } = getInstance(
       <PropUpdater propsUpdate={updatedProps}>
-        <A {...props} />
+        <ParentComponent {...props} />
       </PropUpdater>
     );
 
@@ -77,6 +77,52 @@ describe("Enfrom", () => {
     expect(subject, "queried for first", "input", "to have attributes", {
       value: ""
     });
+  });
+
+  it("should NOT clear field value if re-render with same initial values", () => {
+    function ParentComponent() {
+      const [loading, setLoading] = useState(false);
+
+      return (
+        <Enfrom initial={{ username: "" }}>
+          {({ values, onSubmit, onChange }) => (
+            <form onSubmit={() => {
+              setLoading(true);
+              onSubmit(() => {
+                setLoading(false);
+              });
+            }}>
+              {loading && <span>Loading...</span>}
+              <input type="text" value={values.username} onChange={e => {
+                onChange("username", e.target.value)
+              }} />
+            </form>
+          )}
+        </Enfrom>
+      );
+    }
+
+    const { subject } = getInstance(<ParentComponent />);
+
+    simulate(subject, [
+      {
+        type: "change",
+        target: "input",
+        value: "john"
+      },
+      {
+        type: "submit"
+      }
+    ]);
+
+    expect(
+      subject,
+      "queried for first",
+      "input",
+      "to have attributes", {
+        value: "john"
+      }
+    );
   });
 
   it("should update default values when initial prop changes", () => {
