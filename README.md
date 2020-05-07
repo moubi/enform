@@ -10,7 +10,7 @@
 [![moubi](https://img.shields.io/circleci/build/gh/moubi/enform?label=circleci&style=flat-square)](https://circleci.com/gh/moubi/swipeable-react)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/moubi/enform.svg?style=flat-square&logo=lgtm&logoWidth=15)](https://lgtm.com/projects/g/moubi/enform/context:javascript)
 [![moubi](https://img.shields.io/npm/v/enform?style=flat-square)](https://www.npmjs.com/package/enform)
-[![moubi](https://img.shields.io/static/v1?style=flat-square&label=gzip%20size&message=1.3%20kB&color=green)](#development)
+[![moubi](https://img.shields.io/static/v1?style=flat-square&label=gzip%20size&message=1.6%20kB&color=green)](#development)
 [![moubi](https://img.shields.io/github/license/moubi/enform?style=flat-square)](LICENSE)
 
 [Usage](docs/index.md#basic-form-field-and-a-button) • [Examples](docs/index.md#documentation) • [API](docs/index.md#api) • [Contribute](#contributing) • [License](LICENSE)
@@ -65,7 +65,7 @@ const App = () => (
 
 **View more intereactive [examples here](docs/index.md#documentation)**.
 
-This [⚠️ note on re-rendering](docs/index.md#%EF%B8%8F-note-on-re-rendering) may be useful in the scenario where default values in `initial` prop change between renders, but the actual object passed remain the same (by `ref`).
+This [⚠️ note on re-rendering](docs/index.md#%EF%B8%8F-note-on-re-rendering) gives answers to some common questions about auto updating field values based on changes in the `initial` prop.
 
 ## Install
 ```

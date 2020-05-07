@@ -769,9 +769,9 @@ The `<label />` element takes it's default text from the `initial` object and up
 ___
 
 ## ⚠️ Note on re-rendering
-It is important to note that `<Enform />` **will do its best to re-render when `initial` values change**. That is done by comparing the current and previous value of `initial` by ref.
+It is important to note that `<Enform />` **will do its best to re-render when `initial` values change**. That is done by comparing the current and previous `initial` values.
 
-Usage like this is **guaranteed** to work:
+Usage like this fx is **guaranteed** to work:
 ```jsx
 class ConsumerComponent extends Component {
   ...
@@ -788,7 +788,7 @@ class ConsumerComponent extends Component {
 }
 ```
 
-The following, though, may not work:
+Something like that should also work:
 ```jsx
 class ConsumerComponent extends Component {
   constructor(props) {
@@ -819,23 +819,14 @@ class ConsumerComponent extends Component {
   }
 }
 ```
-In this situation Enform won't update the `<input />` with `"Justing Case"` value. It will remain empty. **Why?** Simply because the same object by ref (`this.initial`) is passed to Enform causing it to think there are no changes for the default values.
+
+### Using Javascript `Set` and `Map` as values
+This is considered more as an edge case and may cause issues in some cases. Fx. Enform uses sorting and `stringification` to compare `initial` values, but `JSON.stringify` doesn't transform `Set` and `Map` structures correctly. It may lead to the state not being updated correctly.
+
+Ensure these values are transformed to an `Object` or `Array` before passing down.
 
 ### What is the solution?
-**First** possible one is to recreate the `initial` prop object on each render:
-```jsx
-render() {
-  {/* Construct a new object out of this.initial */}
-  <Enform initial={{ ...this.initial }}>
-    {props => (
-      {/* input will render "Justin Case" */}
-      <input value={props.values.name} />
-    )}
-  </Enform>
-}
-```
-
-**Second** [recommended technique](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key) would be to use the special `key` prop forcing that way Enform to update. Let's see the changes in the `render()` method:
+[Recommended technique](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key) would be to use the special `key` prop forcing that way Enform to update. Let's see the changes in the `render()` method:
 
 ```jsx
 render() {

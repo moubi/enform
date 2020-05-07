@@ -1,5 +1,14 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import PropTypes from "prop-types";
+
+// Object props does have an order
+const sortObj = obj =>
+  Object.keys(obj)
+    .sort()
+    .reduce(function(result, key) {
+      result[key] = obj[key];
+      return result;
+    }, {});
 
 const errorsFromInitialValues = initial =>
   Object.keys(initial).reduce(
@@ -10,16 +19,27 @@ const errorsFromInitialValues = initial =>
 export default function Enform({ initial, validation, children }) {
   const [values, setValues] = useState({ ...initial });
   const [errors, setErrors] = useState(() => errorsFromInitialValues(initial));
-  const ref = useRef(initial);
+  const ref = useRef(sortObj(initial));
+
+  const reset = useCallback(() => {
+    setValues({ ...initial });
+    setErrors(errorsFromInitialValues(initial));
+  }, [initial]);
 
   useEffect(() => {
-    // That should cover most of the cases
-    if (initial !== ref.current) {
-      setValues({ ...initial });
-      setErrors(errorsFromInitialValues(initial));
-      ref.current = initial;
+    // That should cover most of the use cases.
+    // JSON.stringify is reliable here.
+    // Enform will sort before compare stringified versions of the two object
+    // That gives a higher chance for success without the need of deep equal.
+    // Note: JSON.stringify doesn't handle javascript Sets and Maps.
+    // Using such in forms is considered more of an edge case and should be
+    // handled by consumer components by turning these into an object or array
+    const sortedInitial = sortObj(initial);
+    if (JSON.stringify(sortedInitial) !== JSON.stringify(ref.current)) {
+      reset();
+      ref.current = sortedInitial;
     }
-  }, [initial])
+  }, [initial, reset]);
 
   function isDirty() {
     const fields = Object.keys(initial);
@@ -63,11 +83,6 @@ export default function Enform({ initial, validation, children }) {
 
   function clearErrors() {
     setErrors(errorsFromInitialValues(initial));
-  }
-
-  function reset() {
-    setValues({ ...initial });
-    clearErrors();
   }
 
   function clearError(name) {
