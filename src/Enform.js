@@ -108,12 +108,7 @@ export default function Enform({ initial, validation, children }) {
       ...values,
       [name]: value
     });
-    if (errors[name]) {
-      setErrors(prevErrors => ({
-        ...prevErrors,
-        [name]: false
-      }));
-    }
+    errors[name] && clearError(name);
   }
 
   return children({
