@@ -143,6 +143,78 @@ describe("Enfrom", () => {
     });
   });
 
+  describe("with a programmatically set error", () => {
+    it("should set non user input errors", () => {
+      const { subject } = getInstance(
+        <Enfrom initial={{ username: "" }}>
+          {({ values, errors, setErrors }) => (
+            <form onSubmit={() => setErrors({ username: "Error from an API call!" })}>
+              <input
+                type="text"
+                value={values.username}
+                onChange={() => {}}
+              />
+              {errors.username && <p>{errors.username}</p>}
+            </form>
+          )}
+        </Enfrom>
+      );
+
+      simulate(subject, { type: "submit" });
+
+      expect(subject, "queried for first", "p", "to have text", "Error from an API call!");
+    });
+
+    it("should clear programmatically set error", () => {
+      const { subject } = getInstance(
+        <Enfrom initial={{ username: "john" }}>
+          {({ values, errors, setErrors, onChange }) => (
+            <form onSubmit={() => setErrors({ username: "Error from an API call!" })}>
+              <input
+                type="text"
+                value={values.username}
+                onChange={e => onChange("username", e.target.value)}
+              />
+              {errors.username && <p>{errors.username}</p>}
+            </form>
+          )}
+        </Enfrom>
+      );
+
+      simulate(subject, [
+        { type: "submit" },
+        {
+          type: "change",
+          target: "input",
+          value: ""
+        }
+      ]);
+
+      expect(subject, "to contain no elements matching", "p");
+    });
+
+    it("should not set errors for non existent field name", () => {
+      const { subject } = getInstance(
+        <Enfrom initial={{ username: "" }}>
+          {({ values, errors, setErrors }) => (
+            <form onSubmit={() => setErrors({ email: "johnthewebdev@gmail.com" })}>
+              <input
+                type="text"
+                value={values.username}
+                onChange={() => {}}
+              />
+              {errors.email && <p>{errors.email}</p>}
+            </form>
+          )}
+        </Enfrom>
+      );
+
+      simulate(subject, { type: "submit" });
+
+      expect(subject, "to contain no elements matching", "p");
+    });
+  });
+
   describe("with a single field", () => {
     let subject = null;
     let handleSubmit = null;

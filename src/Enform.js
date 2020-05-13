@@ -111,6 +111,21 @@ export default function Enform({ initial, validation, children }) {
     errors[name] && clearError(name);
   }
 
+  // This method is usually used with API calls to programmatically set
+  // field errors comming as a payload and not as a result of direct user input
+  function setErrorsIfFieldsExist(newErrors) {
+    if (typeof newErrors !== "object") return false;
+    const errorsCopy = { ...errors };
+
+    Object.keys(newErrors).forEach(fieldName => {
+      if (fieldName in errorsCopy) {
+        errorsCopy[fieldName] = newErrors[fieldName];
+      }
+    });
+
+    setErrors({ ...errorsCopy });
+  }
+
   return children({
     values,
     errors,
@@ -120,6 +135,7 @@ export default function Enform({ initial, validation, children }) {
     validateField,
     clearError,
     clearErrors,
+    setErrors: setErrorsIfFieldsExist,
     reset
   });
 }
