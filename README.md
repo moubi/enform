@@ -115,7 +115,7 @@ Enform exposes its handy Api by passing an `object` down to the function wrapper
 | [validateField](docs/index.md#propsvalidatefield-fieldname--bool)&nbsp;&nbsp;&nbsp;&nbsp; | Triggers single form field validation - `validateField(fieldName)`. |
 | [clearError](docs/index.md#propsclearerror-fieldname--void)    | Clears single form field's error - `clearError(fieldName)`. |
 | [clearErrors](docs/index.md#propsclearerrors---void)   | Clears all errors in the form. |
-| [setErrors](docs/index.md#propssetErrors--fieldName-errorMessagebool---void)   | Sets Enform's internal error state directly. This may be handy when `props.errors` needs to be updated based on an API call (async) and not on user input. |
+| [setErrors](docs/index.md#propssetErrors--fieldName-errorMessagebool---void)   | Sets Enform's internal error state directly. This may be handy when `props.errors` needs to be updated based on an API call (async) and not on user input. Example: `setErrors({ email: "Example error message" }, ...)` |
 
 `props.values` get updated with `onChange` and `reset` calls.
 
