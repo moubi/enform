@@ -104,7 +104,7 @@ Enform exposes its handy Api by passing an `object` down to the function wrapper
 | [values](docs/index.md#propsvalues--fieldname-value-)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |  Current field values - `{ fieldName: value, ... }`. |
 | [errors](docs/index.md#propserrors--fieldname-value-)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Current field errors - `{ fieldName: errorMessage, ... }`. |
 
-**and these 7 methods:**
+**and these 8 methods:**
 
 |method|Description|
 |-|-|
@@ -115,10 +115,11 @@ Enform exposes its handy Api by passing an `object` down to the function wrapper
 | [validateField](docs/index.md#propsvalidatefield-fieldname--bool)&nbsp;&nbsp;&nbsp;&nbsp; | Triggers single form field validation - `validateField(fieldName)`. |
 | [clearError](docs/index.md#propsclearerror-fieldname--void)    | Clears single form field's error - `clearError(fieldName)`. |
 | [clearErrors](docs/index.md#propsclearerrors---void)   | Clears all errors in the form. |
+| [setErrors](docs/index.md#propssetErrors--fieldName-errorMessagebool---void)   | Sets Enform's internal error state directly. This may be handy when `props.errors` needs to be updated based on an API call (async) and not on user input. |
 
 `props.values` get updated with `onChange` and `reset` calls.
 
-`props.errors` get updated with `onChange`, `onSubmit`, `reset`, `validateField`, `clearError` and `clearErrors` calls.
+`props.errors` get updated with `onChange`, `onSubmit`, `reset`, `validateField`, `clearError`, `clearErrors` and `setErrors` calls.
 
 ✔️ See more details about [Enform's state API](docs/index.md#enform-state-api).
 

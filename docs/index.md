@@ -21,6 +21,7 @@
       - [props.validateField](#propsvalidatefield-fieldname--bool)
       - [props.clearError](#propsclearerror-fieldname--void)
       - [props.clearErrors](#propsclearerrors---void)
+      - [props.setErrors](#propssetErrors--fieldName-errorMessagebool---void)
  - [How to](#how-to)
     - [handle validation](#handle-validation)
     - [reset a form](#reset-a-form)
@@ -508,6 +509,7 @@ Object containing errors for all fields. These are either the error messages or 
  - props.validateField
  - props.clearError
  - props.clearErrors
+ - props.setErrors
  - props.reset
 
 #### `props.onChange: (fieldName, value) => void`
@@ -583,6 +585,20 @@ Clears the error for a single field. (ex. `props.clearError("email")`). Calling 
 
 #### `props.clearErrors: () => void`
 Calling this method will clear all errors for all fields.
+
+#### `props.setErrors: ({ fieldName: errorMessage|bool }) => void`
+This method can be used to directly set field errors.
+
+**Consider this use case:** a valid form has been submitted, but based on some server side validtion one of the field values appeared to be invalid. The server returns back this field's specific error or error message. Then in the form it is also necessary to display the error message next to the corresponding field. For such scenarios `props.setErrors()` comes to the rescue.
+
+```javascript
+setErrors({
+  username: "Already exists",
+  password: "Password too long",
+  ...
+})
+```
+If a key part of the error object passed to `setErrors` does't match any field name (defined in the `initial` prop) it will simply be ignored.
 ___
 
 ## How to
