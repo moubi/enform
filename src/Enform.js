@@ -41,12 +41,12 @@ export default function Enform({ initial, validation, children }) {
     }
   }, [initial, reset]);
 
-  function isDirty() {
+  const isDirty = useCallback(() => {
     const fields = Object.keys(initial);
     return fields.some(field => initial[field] !== values[field]);
-  }
+  }, [initial, values]);
 
-  function validate(onValid = () => {}) {
+  const validate = useCallback((onValid = () => {}) => {
     if (!validation) return true;
     const newErrors = {};
 
@@ -64,9 +64,9 @@ export default function Enform({ initial, validation, children }) {
     if (isValid) {
       onValid(values);
     }
-  }
+  }, [validation, errors, values]);
 
-  function validateField(name) {
+  const validateField = useCallback(name => {
     if (typeof values[name] !== "undefined") {
       if (typeof validation[name] === "function") {
         const isInvalid = validation[name](values);
@@ -79,13 +79,13 @@ export default function Enform({ initial, validation, children }) {
       }
       return true;
     }
-  }
+  }, [values, validation, errors]);
 
-  function clearErrors() {
+  const clearErrors = useCallback(() => {
     setErrors(errorsFromInitialValues(initial));
-  }
+  }, [initial]);
 
-  function clearError(name) {
+  const clearError = useCallback(name => {
     // Use an updater function here since this method is often used in
     // combination with onChange(). Both are setting state, so we don't
     // want to lose changes.
@@ -93,27 +93,27 @@ export default function Enform({ initial, validation, children }) {
       ...prevErrors,
       [name]: false
     }));
-  }
+  }, []);
 
-  function onSubmit(submitCallback) {
+  const onSubmit = useCallback(submitCallback => {
     validate(values => {
       if (typeof submitCallback === "function") {
         submitCallback(values);
       }
     });
-  }
+  }, [validate]);
 
-  function onChange(name, value) {
+  const onChange = useCallback((name, value) => {
     setValues({
       ...values,
       [name]: value
     });
     errors[name] && clearError(name);
-  }
+  }, [values, errors, clearError]);
 
   // This method is usually used with API calls to programmatically set
   // field errors comming as a payload and not as a result of direct user input
-  function setErrorsIfFieldsExist(newErrors) {
+  const setErrorsIfFieldsExist = useCallback(newErrors => {
     if (typeof newErrors !== "object") return false;
     const errorsCopy = { ...errors };
 
@@ -124,7 +124,7 @@ export default function Enform({ initial, validation, children }) {
     });
 
     setErrors({ ...errorsCopy });
-  }
+  }, [errors]);
 
   return children({
     values,
