@@ -27,8 +27,8 @@ Forms in React are common source of frustration and code repetition. Enform move
 
 **✔️ Check the [docs with live demos](docs/index.md#documentation) or jump to the [basic usage](#basic-usage).**
 
-## So, handling form state?
-Yes, in a beautiful way. Working with forms in React could be turned into straightforwad and enjoyable process. **`<Enform />` makes that possible "the React way" by providing intuitive access to the form state (field values/errors) together with a handy set of API methods to modify it.**
+## So, another form component?
+Many form libraries are after wide range of use cases. As a result they grow in size bigger than the few form components one may ever need to handle. **Enform is built for most common use cases without going to the edge. Thanks to that it remains small, but very powerful.**
 
 ## Basic usage
 <img align="right" width="385" src="./assets/basic_example.png">

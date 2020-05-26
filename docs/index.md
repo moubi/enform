@@ -32,9 +32,9 @@
   - [⚠️ Note on re-rendering](#%EF%B8%8F-note-on-re-rendering)
 
 ## Overview
-Enform was born while trying to deal with forms in React repetitive times with store involved in the picture. Let's face it, things always end up the same. Often the process looks like that - start building the form in existing component, some DOM is added, then it's time to handle user inputs and validation. The result is a big state object to manage and a bunch of component methods to handle changes, submission and validation.
+Enform was born while trying to deal with forms in React repetitive times with state involved in the picture as usual. Let's face it, things always end up the same. The result is a big state object to manage and a bunch of component methods to handle changes, submission and validation.
 
-It feels like these should be somehow hidden or extracted away in another component. `<Enform />` is such a component. **It nicely moves that frustration away and keeps the power of forms in React**.
+It feels like these should be somehow hidden or extracted away in another component. `<Enform />` is such HOC component. **It nicely moves that state management away by using React's power**.
 
 Ok, enough theory, let's see some real use cases.
 
