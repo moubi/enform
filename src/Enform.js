@@ -51,7 +51,7 @@ export default function Enform({ initial, validation, children }) {
     const newErrors = {};
 
     for (let i in validation) {
-      newErrors[i] = validation[i](values);
+      newErrors[i] = validation[i](values) || false;
     }
 
     const isValid = !Object.values(newErrors).some(err => err);
@@ -69,7 +69,7 @@ export default function Enform({ initial, validation, children }) {
   const validateField = useCallback(name => {
     if (typeof values[name] !== "undefined") {
       if (typeof validation[name] === "function") {
-        const isInvalid = validation[name](values);
+        const isInvalid = validation[name](values) || false;
         setErrors({
           ...errors,
           [name]: isInvalid
