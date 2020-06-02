@@ -83,7 +83,7 @@ Consumer projects should have <kbd>react >= 16.8.0</kbd> (the one with hooks) in
 | ------------- | ------------- | -------- | ----------- |
 | children      | function      | yes      | Function that your need to wrap your DOM with. It accepts the `props` object to help with form state manipulation. |
 | [initial](docs/index.md#initial--fieldname-value----required)       | object        | yes      | Initial form field values in a form of `{ fieldName: value, ... }`. |
-| [validation](docs/index.md#validation--fieldname-functionvalues--boolstring-)    | object        | no       | Validation for the fields. It takes the form of `{ fieldName: function, ... }` where the `function(values)` accepts all form field values and should return either an error message or truthy/falsey value. Example: `{ username: values => values.username === "" ? "This field is required" : false }`. |
+| [validation](docs/index.md#validation--fieldname-functionvalues--boolstring-)    | object        | no       | Validation for the fields. It takes the form of `{ fieldName: function(values), ... }` where `function(values)` accepts all form field values and should return an error message or truthy value. Example: `{ username: values => values.username === "" ? "This field is required" : false }`. |
 
 ✔️ Read more about these props [here](docs/index.md#enform-component-props).
 
