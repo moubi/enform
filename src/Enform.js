@@ -112,7 +112,7 @@ export default function Enform({ initial, validation, children }) {
   }, [values, errors, clearError]);
 
   // This method is usually used with API calls to programmatically set
-  // field errors comming as a payload and not as a result of direct user input
+  // field errors coming as a payload and not as a result of direct user input
   const setErrorsIfFieldsExist = useCallback(newErrors => {
     if (typeof newErrors !== "object") return false;
     const errorsCopy = { ...errors };
