@@ -76,7 +76,7 @@ const App = () => (
 
 **Few things to note here:**
  - `initial` (required) prop is set with the field's default value
- - `validation` object defines the field should not be empty
+ - `validation` object sets the field should not be empty
  - `props.onSubmit` is bound to the button click. It will submit whenever validation is passed
  - the input field is fully controlled with the help of `props.values` and `props.onChange`.
 
@@ -114,7 +114,7 @@ ___
 ```
 [![Edit Newsletter form with enform](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/newsletter-form-with-enform-t1zyk?fontsize=14&hidenavigation=1&theme=dark)
 
-In this example `validation` is set for the email field using RegEx. It will return `true` if email is invalid or `false` otherwise. All [validator functions](#validation--fieldname-functionvalues--boolstring-) must return truthy/falsy value.
+In this example `validation` is set for the email field using RegEx. It will return `true` if email is invalid or `false` otherwise. All [validator functions](#validation--fieldname-functionvalues--boolstring-) must return truthy value in case of error.
 ___
 
 ### Registration form
@@ -176,7 +176,7 @@ ___
 
 This example is shortened, so that it's easy to focus on two interesting parts - **password validation** and **clearing errors**. Take a look at the [full demo in the codesandbox](https://codesandbox.io/s/registration-form-with-enform-u6up9?fontsize=14&hidenavigation=1&theme=dark).
 
-This registration form displays error messages as well. In order that to work each validator function must return the error string or `false` in case of no error. The `password` validation depends on both password and repeatPassword values, so it will display two different error messages.
+This registration form displays error messages as well. In order that to work each validator function must return the error string in case of error. The `password` validation depends on both password and repeatPassword values, so it will display two different error messages.
 
 **Secondly**, password's `onChange` should also clear the error for `repeatPassword`. `props.onChange("password", e.target.value)` does so for the password field, but it needs to be done for repeatPassword as well. That can be achieved by calling `props.clearError("repeatPassword")`.
 ___
@@ -477,7 +477,7 @@ Two props can be set to the component itself - `initial` and `validation`.
 The prop is the only **required one**. It is so, because it needs to tell Enform what is the current field structure. The initial value of each field should be a valid React element's value. That means if there is a `checkbox` fx. it make sense for its initial value to be `boolean`. The structure could be something like `{ email: "", password: "", newsletter: false }`.
 
 #### `validation: { fieldName: function(values) => bool|string) }`
-It is used for specifying validation conditions and error messages. Don't set it if validation is not needed. The `key` (field name) should be the same as in the `initial`. The `value` is a validator function which accepts all field values. Validators should return an **error message** when field is invalid or just a **boolean** if no messages are needed. The following: `{ username: values => values.username.length === 0 }` returns a boolean simply telling if the field is empty. Such a condition is useful when setting an error class to the field is enough. Setting up error messages could be achieved with something like that `{ username: values => values.username.length === 0 ? "This field is required" : "" }`.
+It is used for specifying validation conditions and error messages. Don't set it if no validation is needed. The `key` (field name) should be the same as in the `initial`. The `value` is a validator function which accepts all field values. Validators should return an **error message** when field is invalid or just `true` if no messages are needed. The following: `{ username: values => values.username.length === 0 }` returns a boolean simply telling if the field is empty. Such a condition may be useful when setting an error class to a field is enough. Setting up error messages is achieved with something like `{ username: values => values.username.length === 0 ? "This field is required" : "" }`. **If validation is passing it will always default to `false` value for that field in the errors object.**
 ___
 
 ### Enform state API
@@ -501,7 +501,7 @@ Object containing all field values. The signature is `{ fieldName: value }` wher
  - props.reset
 
 #### `props.errors: { fieldName: value }`
-Object containing errors for all fields. These are either the error messages or simply true|false values. `fieldName` is the same field name defined in the [initial](#initial--fieldname-value----required) while `value` is returned from the validator function (error message or boolean) defined in [validation](#validation--fieldname-functionvalues--boolstring-). In case of no error `props.errors.<fieldName>` should be `false` or any falsy value returned from the validator.
+Object containing errors for all fields. These are either the error messages or simply the boolean `true`. `fieldName` is the same field name defined in the [initial](#initial--fieldname-value----required) while `value` is returned from the validator function (error message or boolean) defined in [validation](#validation--fieldname-functionvalues--boolstring-). In case of no error `props.errors.<fieldName>` will be `false`.
 
 `props.errors` get updated when calling:
  - props.onChange
@@ -550,7 +550,7 @@ Clears all fields and errors. Calling `props.reset()` will set the fields back t
 Calling `props.isDirty()` reports if form state has changed. It does so by performing comparison between fields current and `initial` values. Since it is an expensive operation Enform does't keep track of dirty state internally. That's why isDirty is method instead.
 
 #### `props.validateField: (fieldName) => bool`
-It triggers validation for a single field (ex. `props.validateField("email")`). As a result the validator function (if any) for that field will be executed and the returned value set in `props.errors`. Common use would be if a field needs to be validated everytime user is typing.
+It triggers validation for a single field (ex. `props.validateField("email")`). As a result the validator function (if any) for that field will be executed and the corresponding value in `props.errors` set. Common use case would be if a field needs to be validated every time while user is typing.
 
 ```jsx
 <Enform initial={{ email: "" }}>
@@ -625,7 +625,7 @@ If name field is empty `props.errors.name` will be set to `true`. Otherwise it w
   )}}
 >
 ```
-If name field is empty the `"This field can not be empty"` message will be stored in `props.errors.name`. Otherwise it will be an empty string.
+If name field is empty the `"This field can not be empty"` message will be stored in `props.errors.name`. Otherwise it will be `false`.
 
 #### Validation while typing
 ```jsx
@@ -645,7 +645,7 @@ If name field is empty the `"This field can not be empty"` message will be store
   }
 </Enform>
 ```
-The name field validator will be called everytime user is typing in the field. This will cause `props.errors.name` to be updated constantly and cleared (with `props.onChange`) once the value reaches at least `3` chars.
+The name field validator will be called every time user is typing in the field. This will cause `props.errors.name` to be updated constantly and cleared (with `props.onChange`) once the value reaches at least `3` chars.
 
 #### Password validation
 Typical example is a signup form with `password` and `repeatPassword` fields. Find more details in this [full codesandbox demo](https://codesandbox.io/s/registration-form-with-enform-u6up9?fontsize=14&hidenavigation=1&theme=dark).
@@ -684,7 +684,7 @@ Let's see how to reset a form on button click:
   }
 </Enform>
 ```
-Resetting a form with Enform will **reset all fields** and **clear all errors**. The action is similar to reinitializing. See this [full form demo](https://codesandbox.io/s/full-featured-form-with-enform-qw3tu?fontsize=14&hidenavigation=1&theme=dark) for usage example.
+Resetting a form with Enform will **reset all fields** and **clear all errors**. The action is similar to re-initializing. See this [full form demo](https://codesandbox.io/s/full-featured-form-with-enform-qw3tu?fontsize=14&hidenavigation=1&theme=dark) for usage example.
 ___
 
 ### Submit a form
@@ -762,7 +762,7 @@ ContentEditable elements are sometimes very quirky. With React it is often requi
   )}
 </Enform>
 ```
-There are few differences with the standard `<input />`. Instead of `onChange` changes are registered via `onInput`, the text recides in `e.target.innerText` and the value is placed as a `child` of the div.
+There are few differences with the standard `<input />`. Instead of `onChange` changes are registered via `onInput`, the text resides in `e.target.innerText` and the value is placed as a `child` of the div.
 ___
 
 ### Handle form-like DOM
@@ -858,7 +858,7 @@ render() {
   </Enform>
 }
 ```
-The only differece is that now the `key` prop is set to `this.state.name` telling React to *create a new component instance rather than update the current one*.
+The only difference is that now the `key` prop is set to `this.state.name` telling React to *create a new component instance rather than update the current one*.
 ___
 
 <div align="center">The end!</div>

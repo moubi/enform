@@ -51,7 +51,7 @@ export default function Enform({ initial, validation, children }) {
     const newErrors = {};
 
     for (let i in validation) {
-      newErrors[i] = validation[i](values);
+      newErrors[i] = validation[i](values) || false;
     }
 
     const isValid = !Object.values(newErrors).some(err => err);
@@ -69,7 +69,7 @@ export default function Enform({ initial, validation, children }) {
   const validateField = useCallback(name => {
     if (typeof values[name] !== "undefined") {
       if (typeof validation[name] === "function") {
-        const isInvalid = validation[name](values);
+        const isInvalid = validation[name](values) || false;
         setErrors({
           ...errors,
           [name]: isInvalid
@@ -112,7 +112,7 @@ export default function Enform({ initial, validation, children }) {
   }, [values, errors, clearError]);
 
   // This method is usually used with API calls to programmatically set
-  // field errors comming as a payload and not as a result of direct user input
+  // field errors coming as a payload and not as a result of direct user input
   const setErrorsIfFieldsExist = useCallback(newErrors => {
     if (typeof newErrors !== "object") return false;
     const errorsCopy = { ...errors };

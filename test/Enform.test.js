@@ -226,10 +226,10 @@ describe("Enfrom", () => {
           initial={{ username: "" }}
           validation={{
             username: ({ username }) =>
-              username.length < 3 ? "Min 3 chars" : false
+              username.length < 3 ? "Min 3 chars" : ""
           }}
         >
-          {({ values, errors, onChange, onSubmit }) => (
+          {({ values, errors, onChange, onSubmit, validateField }) => (
             <form
               onSubmit={() => {
                 onSubmit(handleSubmit);
@@ -242,7 +242,13 @@ describe("Enfrom", () => {
                 onChange={e => {
                   onChange("username", e.target.value);
                 }}
+                onFocus={() => {
+                  validateField("username");
+                }}
               />
+              <p>
+                {errors.username === false && "No errors"}
+              </p>
             </form>
           )}
         </Enfrom>
@@ -269,6 +275,43 @@ describe("Enfrom", () => {
       simulate(subject, { type: "submit" });
 
       expect(subject, "queried for first", "input", "to have class", "error");
+    });
+
+    it("should default passing field validation to 'false'", () => {
+      simulate(subject, [
+        {
+          type: "change",
+          target: "input",
+          data: {
+            target: {
+              value: "new value"
+            }
+          }
+        },
+        { type: "submit" }
+      ]);
+
+      expect(subject, "queried for first", "p", "to have text", "No errors");
+    });
+
+    it("should default passing single field validation to 'false'", () => {
+      simulate(subject, [
+        {
+          type: "change",
+          target: "input",
+          data: {
+            target: {
+              value: "new value"
+            }
+          }
+        },
+        {
+          type: "focus",
+          target: "input"
+        }
+      ]);
+
+      expect(subject, "queried for first", "p", "to have text", "No errors");
     });
 
     it("should clear error when start typing", () => {
