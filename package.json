@@ -47,7 +47,7 @@
     "react": ">= 16.8.0"
   },
   "scripts": {
-    "build": "mkdir -p lib && babel ./src --out-file ./lib/index.js --presets minify",
+    "build": "mkdir -p lib && babel ./src --out-file ./lib/index.js --no-comments --presets minify",
     "size": "gzip-size ./lib/index.js",
     "prepare": "rm -rf ./lib && npm run build",
     "prepublishOnly": "npm run test:nowatch",
