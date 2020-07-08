@@ -6,7 +6,7 @@ import expect, {
 import React, { useState } from "react";
 import sinon from "sinon";
 
-import Enform, { useForm } from "../src/Enform";
+import Enform, { useEnform } from "../src/Enform";
 
 describe("Enform", () => {
   it("should render default", () => {
@@ -143,10 +143,10 @@ describe("Enform", () => {
     });
   });
 
-  describe("with a hook", () => {
+  describe("with useEnform hook", () => {
     it("should render default", () => {
       function Form() {
-        const { values } = useForm({ username: "" });
+        const { values } = useEnform({ username: "" });
 
         return <input type="text" value={values.username} onChange={() => {}} />
       }
@@ -161,7 +161,7 @@ describe("Enform", () => {
 
     it("should render with non empty initial value", () => {
       function Form() {
-        const { values } = useForm({ username: "jason" });
+        const { values } = useEnform({ username: "jason" });
 
         return <input type="text" value={values.username} onChange={() => {}} />
       }
@@ -189,7 +189,7 @@ describe("Enform", () => {
       }
 
       function Form({ initial }) {
-        const { values } = useForm(initial);
+        const { values } = useEnform(initial);
 
         return <input type="text" value={values.username} onChange={() => {}} />
       }
@@ -222,7 +222,7 @@ describe("Enform", () => {
 
     it("should NOT clear field value if re-render with same initial values", () => {
       function Form() {
-        const { values, onSubmit, onChange } = useForm({ username: "" });
+        const { values, onSubmit, onChange } = useEnform({ username: "" });
         const [loading, setLoading] = useState(false);
 
         return (

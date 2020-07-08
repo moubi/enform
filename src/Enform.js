@@ -16,7 +16,7 @@ const errorsFromInitialValues = initial =>
     {}
   );
 
-export const useForm = (initial, validation) => {
+export const useEnform = (initial, validation) => {
   const [values, setValues] = useState({ ...initial });
   const [errors, setErrors] = useState(() => errorsFromInitialValues(initial));
   const ref = useRef(sortObj(initial));
@@ -141,7 +141,7 @@ export const useForm = (initial, validation) => {
 };
 
 export default function Enform({ initial, validation, children }) {
-  return children(useForm(initial, validation));
+  return children(useEnform(initial, validation));
 }
 
 Enform.propTypes = {
