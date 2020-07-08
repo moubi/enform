@@ -16,7 +16,7 @@ const errorsFromInitialValues = initial =>
     {}
   );
 
-const useForm = (initial, validation) => {
+export const useForm = (initial, validation) => {
   const [values, setValues] = useState({ ...initial });
   const [errors, setErrors] = useState(() => errorsFromInitialValues(initial));
   const ref = useRef(sortObj(initial));
