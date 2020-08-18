@@ -16,7 +16,7 @@ const errorsFromInitialValues = initial =>
     {}
   );
 
-export default function Enform({ initial, validation, children }) {
+export const useEnform = (initial, validation) => {
   const [values, setValues] = useState({ ...initial });
   const [errors, setErrors] = useState(() => errorsFromInitialValues(initial));
   const ref = useRef(sortObj(initial));
@@ -126,7 +126,7 @@ export default function Enform({ initial, validation, children }) {
     setErrors({ ...errorsCopy });
   }, [errors]);
 
-  return children({
+  return {
     values,
     errors,
     onChange,
@@ -137,7 +137,11 @@ export default function Enform({ initial, validation, children }) {
     clearErrors,
     setErrors: setErrorsIfFieldsExist,
     reset
-  });
+  };
+};
+
+export default function Enform({ initial, validation, children }) {
+  return children(useEnform(initial, validation));
 }
 
 Enform.propTypes = {

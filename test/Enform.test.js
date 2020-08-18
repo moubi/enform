@@ -6,16 +6,16 @@ import expect, {
 import React, { useState } from "react";
 import sinon from "sinon";
 
-import Enfrom from "../src/Enform";
+import Enform, { useEnform } from "../src/Enform";
 
-describe("Enfrom", () => {
+describe("Enform", () => {
   it("should render default", () => {
     expect(
-      <Enfrom initial={{ username: "" }}>
+      <Enform initial={{ username: "" }}>
         {({ values }) => (
           <input type="text" value={values.username} onChange={() => {}} />
         )}
-      </Enfrom>,
+      </Enform>,
       "when mounted",
       "to exhaustively satisfy",
       <input type="text" value="" onChange={expect.it("to be a function")} />
@@ -24,11 +24,11 @@ describe("Enfrom", () => {
 
   it("should render with non empty initial value", () => {
     expect(
-      <Enfrom initial={{ username: "jason" }}>
+      <Enform initial={{ username: "jason" }}>
         {({ values }) => (
           <input type="text" value={values.username} onChange={() => {}} />
         )}
-      </Enfrom>,
+      </Enform>,
       "to exhaustively satisfy",
       <input
         type="text"
@@ -57,11 +57,11 @@ describe("Enfrom", () => {
       }
 
       return (
-        <Enfrom initial={initial}>
+        <Enform initial={initial}>
           {({ values }) => (
             <input type="text" value={values.username} onChange={() => {}} />
           )}
-        </Enfrom>
+        </Enform>
       );
     }
 
@@ -84,7 +84,7 @@ describe("Enfrom", () => {
       const [loading, setLoading] = useState(false);
 
       return (
-        <Enfrom initial={{ username: "" }}>
+        <Enform initial={{ username: "" }}>
           {({ values, onSubmit, onChange }) => (
             <form onSubmit={() => {
               setLoading(true);
@@ -98,7 +98,7 @@ describe("Enfrom", () => {
               }} />
             </form>
           )}
-        </Enfrom>
+        </Enform>
       );
     }
 
@@ -128,11 +128,11 @@ describe("Enfrom", () => {
   it("should update default values when initial prop changes", () => {
     const { applyPropsUpdate, subject } = getInstance(
       <PropUpdater propsUpdate={{ initial: { username: "john" } }}>
-        <Enfrom initial={{ username: "" }}>
+        <Enform initial={{ username: "" }}>
           {({ values }) => (
             <input type="text" value={values.username} onChange={() => {}} />
           )}
-        </Enfrom>
+        </Enform>
       </PropUpdater>
     );
 
@@ -143,10 +143,131 @@ describe("Enfrom", () => {
     });
   });
 
+  describe("with useEnform hook", () => {
+    it("should render default", () => {
+      function Form() {
+        const { values } = useEnform({ username: "" });
+
+        return <input type="text" value={values.username} onChange={() => {}} />
+      }
+
+      expect(
+        <Form />,
+        "when mounted",
+        "to exhaustively satisfy",
+        <input type="text" value="" onChange={expect.it("to be a function")} />
+      );
+    });
+
+    it("should render with non empty initial value", () => {
+      function Form() {
+        const { values } = useEnform({ username: "jason" });
+
+        return <input type="text" value={values.username} onChange={() => {}} />
+      }
+
+      expect(
+        <Form />,
+        "when mounted",
+        "to exhaustively satisfy",
+        <input
+          type="text"
+          value="jason"
+          onChange={expect.it("to be a function")}
+        />
+      );
+    });
+
+    it("should NOT update default values when initial prop changes, but remains the same ref", () => {
+      const props = {
+        change: false,
+        initial: { username: "" }
+      };
+      const updatedProps = {
+        change: true,
+        initial: props.initial
+      }
+
+      function Form({ initial }) {
+        const { values } = useEnform(initial);
+
+        return <input type="text" value={values.username} onChange={() => {}} />
+      }
+
+      function ParentComponent({ initial, change }) {
+        // A way to simulate change in the initial prop while
+        // keep ref to the same object
+        if (change) {
+          initial.username = "john";
+        }
+
+        return (
+          <Form initial={initial} />
+        );
+      }
+
+      const { applyPropsUpdate, subject } = getInstance(
+        <PropUpdater propsUpdate={updatedProps}>
+          <ParentComponent {...props} />
+        </PropUpdater>
+      );
+
+      applyPropsUpdate();
+
+      // Still displays the firstly set empty username
+      expect(subject, "queried for first", "input", "to have attributes", {
+        value: ""
+      });
+    });
+
+    it("should NOT clear field value if re-render with same initial values", () => {
+      function Form() {
+        const { values, onSubmit, onChange } = useEnform({ username: "" });
+        const [loading, setLoading] = useState(false);
+
+        return (
+          <form onSubmit={() => {
+            setLoading(true);
+            onSubmit(() => {
+              setLoading(false);
+            });
+          }}>
+            {loading && <span>Loading...</span>}
+            <input type="text" value={values.username} onChange={e => {
+              onChange("username", e.target.value)
+            }} />
+          </form>
+        );
+      }
+
+      const { subject } = getInstance(<Form />);
+
+      simulate(subject, [
+        {
+          type: "change",
+          target: "input",
+          value: "john"
+        },
+        {
+          type: "submit"
+        }
+      ]);
+
+      expect(
+        subject,
+        "queried for first",
+        "input",
+        "to have attributes", {
+          value: "john"
+        }
+      );
+    });
+  });
+
   describe("with a programmatically set error", () => {
     it("should set non user input errors", () => {
       const { subject } = getInstance(
-        <Enfrom initial={{ username: "" }}>
+        <Enform initial={{ username: "" }}>
           {({ values, errors, setErrors }) => (
             <form onSubmit={() => setErrors({ username: "Error from an API call!" })}>
               <input
@@ -157,7 +278,7 @@ describe("Enfrom", () => {
               {errors.username && <p>{errors.username}</p>}
             </form>
           )}
-        </Enfrom>
+        </Enform>
       );
 
       simulate(subject, { type: "submit" });
@@ -167,7 +288,7 @@ describe("Enfrom", () => {
 
     it("should clear programmatically set error", () => {
       const { subject } = getInstance(
-        <Enfrom initial={{ username: "john" }}>
+        <Enform initial={{ username: "john" }}>
           {({ values, errors, setErrors, onChange }) => (
             <form onSubmit={() => setErrors({ username: "Error from an API call!" })}>
               <input
@@ -178,7 +299,7 @@ describe("Enfrom", () => {
               {errors.username && <p>{errors.username}</p>}
             </form>
           )}
-        </Enfrom>
+        </Enform>
       );
 
       simulate(subject, [
@@ -195,7 +316,7 @@ describe("Enfrom", () => {
 
     it("should not set errors for non existent field name", () => {
       const { subject } = getInstance(
-        <Enfrom initial={{ username: "" }}>
+        <Enform initial={{ username: "" }}>
           {({ values, errors, setErrors }) => (
             <form onSubmit={() => setErrors({ email: "johnthewebdev@gmail.com" })}>
               <input
@@ -206,7 +327,7 @@ describe("Enfrom", () => {
               {errors.email && <p>{errors.email}</p>}
             </form>
           )}
-        </Enfrom>
+        </Enform>
       );
 
       simulate(subject, { type: "submit" });
@@ -222,7 +343,7 @@ describe("Enfrom", () => {
     beforeEach(() => {
       handleSubmit = sinon.stub().named("handleSubmit");
       subject = getInstance(
-        <Enfrom
+        <Enform
           initial={{ username: "" }}
           validation={{
             username: ({ username }) =>
@@ -251,7 +372,7 @@ describe("Enfrom", () => {
               </p>
             </form>
           )}
-        </Enfrom>
+        </Enform>
       ).subject;
     });
 
@@ -386,7 +507,7 @@ describe("Enfrom", () => {
 
     it("should validate while typing", () => {
       const { subject } = getInstance(
-        <Enfrom
+        <Enform
           initial={{ username: "" }}
           validation={{
             username: ({ username }) =>
@@ -410,7 +531,7 @@ describe("Enfrom", () => {
               />
             </form>
           )}
-        </Enfrom>
+        </Enform>
       );
 
       simulate(subject, [
@@ -436,7 +557,7 @@ describe("Enfrom", () => {
     beforeEach(() => {
       handleSubmit = sinon.stub().named("handleSubmit");
       subject = getInstance(
-        <Enfrom
+        <Enform
           initial={{
             email: "",
             password: "",
@@ -584,7 +705,7 @@ describe("Enfrom", () => {
               </button>
             </div>
           )}
-        </Enfrom>
+        </Enform>
       ).subject;
     });
 
