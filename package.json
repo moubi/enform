@@ -1,6 +1,6 @@
 {
   "name": "enform",
-  "version": "2.2.3",
+  "version": "2.3.0",
   "main": "lib/index.js",
   "description": "Handle React forms with joy!",
   "homepage": "https://github.com/moubi/enform#readme",
