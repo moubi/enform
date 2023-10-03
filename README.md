@@ -16,7 +16,7 @@
 [Usage](docs/index.md#basic-form-field-and-a-button) • [Examples](docs/index.md#documentation) • [API](docs/index.md#api) • [Contribute](#contributing) • [License](LICENSE)
 </div>
 
-#### `<Enform />` helps you manage:
+#### `Enform` helps you manage:
  - form validation
  - form dirty state
  - form submission and reset
@@ -34,7 +34,38 @@ Many form libraries are after wide range of use cases. As a result they grow in 
 <img align="right" width="385" src="./assets/basic_example.png">
 
 ```jsx
-import React from "react";
+import { useEnform } from "enform";
+
+function App() {
+  const { errors, values, onChange, onSubmit } = useEnform(
+    { name: "" },
+    { name: values => values.name === "" }
+  );
+
+  return (
+    <div>
+      <h1>Simple form</h1>
+        <div>
+          <input
+            className={errors.name ? "error" : ""}
+            type="text"
+            value={values.name}
+            onChange={e => {
+              onChange("name", e.target.value);
+            }}
+          />
+          <button onClick={onSubmit}>Submit</button>
+        </div>
+    </div>
+  );
+}
+```
+
+<details>
+<summary><strong>Render props component usage</strong></summary>
+<br>
+
+```jsx
 import Enform from "enform";
 
 const App = () => (
@@ -62,10 +93,9 @@ const App = () => (
 );
 ```
 [![Edit Basic form with enform](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/newsletter-form-with-enform-dv69b?fontsize=14&hidenavigation=1&theme=dark)
+</details>
 
 **View more intereactive [examples here](docs/index.md#documentation)**.
-
-This [⚠️ note on re-rendering](docs/index.md#%EF%B8%8F-note-on-re-rendering) gives answers to some common questions about auto updating field values based on changes in the `initial` prop.
 
 ## Install
 ```
@@ -78,17 +108,22 @@ Enform is using React hooks ↩ as per `v2.0.0`.
 Consumer projects should have <kbd>react >= 16.8.0</kbd> (the one with hooks) in order to use it.
 
 ## API
-### Component props
-| Prop          | Type          | Required | Description |
-| ------------- | ------------- | -------- | ----------- |
-| children      | function      | yes      | Function that your need to wrap your DOM with. It accepts the `props` object to help with form state manipulation. |
-| [initial](docs/index.md#initial--fieldname-value----required)       | object        | yes      | Initial form field values in a form of `{ fieldName: value, ... }`. |
-| [validation](docs/index.md#validation--fieldname-functionvalues--boolstring-)    | object        | no       | Validation for the fields. It takes the form of `{ fieldName: function(values), ... }` where `function(values)` accepts all form field values and should return an error message or truthy value. Example: `{ username: values => values.username === "" ? "This field is required" : false }`. |
+### Component props (`useEnform` hook arguments)
+| Prop/Argument | Type          | Required | Available   | Description |
+| ------------- | ------------- | -------- | ----------- | ----------- |
+| children      | function      | yes      | `<Enform />`| Function that your need to wrap your DOM with. It accepts the `props` object to help with form state manipulation. |
+| [initial](docs/index.md#initial--fieldname-value----required)       | object        | yes      | `<Enform />` and `useEnform()`| Initial form field values in a form of `{ fieldName: value, ... }`. |
+| [validation](docs/index.md#validation--fieldname-functionvalues--boolstring-)    | object        | no       | `<Enform />` and `useEnform()`| Validation for the fields. It takes the form of `{ fieldName: function(values), ... }` where `function(values)` accepts all form field values and should return an error message or truthy value. Example: `{ username: values => values.username === "" ? "This field is required" : false }`. |
 
 ✔️ Read more about these props [here](docs/index.md#enform-component-props).
 
 ### State Api
-Enform exposes its handy Api by passing an `object` down to the function wrapper.
+Enform exposes its handy Api by returning an `object` with the `useEnform()` call.
+```jsx
+const props = useEnform({ name: "" });
+```
+
+or passing the same `object` down to the render prop (children) of `<Enform />`.
 ```jsx
 <Enform initial={{ name: "" }}>
   {props => (
@@ -98,6 +133,7 @@ Enform exposes its handy Api by passing an `object` down to the function wrapper
   )}
 </Enform>
 ```
+
 **The `props` object contains 2 data items:**
 |prop|Description|
 |-|-|
