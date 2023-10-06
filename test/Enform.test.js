@@ -336,6 +336,80 @@ describe("Enform", () => {
     });
   });
 
+  describe("with multiple values set", () => {
+    let subject = null;
+
+    beforeEach(() => {
+      subject = getInstance(
+        <Enform
+          initial={{ field1: "", field2: "" }}
+          validation={{}}
+        >
+          {({ values, onChange }) => (
+            <form>
+              <input
+                type="text"
+                value={values.field1}
+                name="field1"
+                onChange={e => {
+                  onChange("field1", e.target.value);
+                  onChange("field2", e.target.value);
+                }}
+              />
+              <input
+                type="text"
+                value={values.field2}
+                name="field2"
+                onChange={e => {
+                  onChange("field2", e.target.value);
+                  onChange("field1", e.target.value);
+                }}
+              />
+            </form>
+          )}
+        </Enform>
+      ).subject;
+    });
+
+    it("should update both fields' value after a change on the first", () => {
+      simulate(subject, {
+        type: "change",
+        target: "input[name=field1]",
+        data: {
+          target: {
+            value: "new value"
+          }
+        }
+      });
+
+      expect(subject, "queried for first", "input[name=field1]", "to have attributes", {
+        value: "new value"
+      });
+      expect(subject, "queried for first", "input[name=field2]", "to have attributes", {
+        value: "new value"
+      });
+    });
+
+    it("should update both fields' value after a change on the second", () => {
+      simulate(subject, {
+        type: "change",
+        target: "input[name=field2]",
+        data: {
+          target: {
+            value: "new value"
+          }
+        }
+      });
+
+      expect(subject, "queried for first", "input[name=field1]", "to have attributes", {
+        value: "new value"
+      });
+      expect(subject, "queried for first", "input[name=field2]", "to have attributes", {
+        value: "new value"
+      });
+    });
+  })
+
   describe("with a single field", () => {
     let subject = null;
     let handleSubmit = null;

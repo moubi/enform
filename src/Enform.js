@@ -104,12 +104,12 @@ export const useEnform = (initial, validation) => {
   }, [validate]);
 
   const onChange = useCallback((name, value) => {
-    setValues({
-      ...values,
+    setValues(prevValues => ({
+      ...prevValues,
       [name]: value
-    });
+    }));
     errors[name] && clearError(name);
-  }, [values, errors, clearError]);
+  }, [errors, clearError]);
 
   // This method is usually used with API calls to programmatically set
   // field errors coming as a payload and not as a result of direct user input
